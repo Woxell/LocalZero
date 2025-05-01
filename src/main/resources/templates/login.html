@@ -2,21 +2,25 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>LocalZero - Login</title>
+    <link rel="stylesheet" href="/static/css/style.css">
 </head>
 <body>
+<section class="form-container">
 <h1>Login</h1>
 <form th:action="@{/login}" method="post">
-    <div>
+    <div class="input-group">
         <label for="email">Email:</label>
-        <input type="text" id="email" name="email">
+        <input type="text" id="email" name="email" required>
     </div>
-    <div>
+    <div class="input-group">
         <label for="password">Password:</label>
-        <input type="password" id="password" name="password">
+        <input type="password" id="password" name="password" required>
     </div>
     <button type="submit">Login</button>
+    <p>Don't have an account? <a th:href="@{/register}" style="color: #90cdf4">Register here</a></p>
+
 </form>
-<p>Don't have an account? <a th:href="@{/register}">Register here</a></p>
+</section>
 </body>
 </html>
