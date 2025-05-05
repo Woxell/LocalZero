@@ -3,11 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <title>Register</title>
-    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="css/style.css">
+    <script src="/js/register.js" defer></script>
 </head>
 <body>
 <section>
-<form th:action="@{/register}" method="post" class="form-container">
+<form class="form-container">
     <h1>Register</h1>
     <div class="input-group">
         <label for="name">Name:</label>
@@ -23,9 +24,9 @@
     </div>
     <div class="input-group">
         <label for="profilePicture">Profile Picture URL:</label>
-        <input type="url" id="profilePicture" name="profilePicture">
+        <input type="text" id="profilePicture" name="profilePicture">
     </div>
-    <button type="submit">Register</button>
+    <button id= "submit" type="submit">Register</button>
 </form>
 </section>
 </body>

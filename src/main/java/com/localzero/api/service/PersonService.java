@@ -21,6 +21,7 @@ public class PersonService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        System.out.println("Loading user by email: " + email);
         Optional<Person> person = personRepository.findByEmail(email);
         if (person.isPresent()) {
             var personObj = person.get();
