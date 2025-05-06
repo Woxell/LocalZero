@@ -37,3 +37,5 @@ build/
 #Ignorera konfig
 application-secrets.properties
 .env
+src/main/resources/application-secrets.properties
+src/main/resources/application-secrets.properties
