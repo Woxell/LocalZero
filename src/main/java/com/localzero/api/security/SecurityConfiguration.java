@@ -42,6 +42,7 @@ public class SecurityConfiguration {
                             .loginPage("/login")
                             .usernameParameter("email")
                             .permitAll();
+                    httpForm.defaultSuccessUrl("/feed", true); // Redirect to /feed after login
                 })
                 .authorizeHttpRequests(registry -> {
                     registry
