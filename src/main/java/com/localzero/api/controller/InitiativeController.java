@@ -1,12 +1,15 @@
 package com.localzero.api.controller;
 
+/**
+ * @author: Emil
+ */
+
 import com.localzero.api.entity.Initiative;
 import com.localzero.api.entity.Person;
 import com.localzero.api.repository.InitiativeRepository;
 import com.localzero.api.repository.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -26,7 +29,7 @@ public class InitiativeController {
     Initiative initiative = new Initiative();
     initiative.setTitle(title);
     initiative.setDescription(description);
-    initiative.setCreatedBy(person);
+    initiative.setCreator(person);
 
     initiativeRepository.save(initiative);
 
