@@ -3,7 +3,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 /**
- * @author: Mahyar
+ * @author: Mahyar, Emil
  */
 
 @Entity
@@ -12,11 +12,21 @@ import lombok.Data;
 public class EcoAction {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(name = "author_email",nullable = false)
+    private String authorEmail;
+
+    /*
+    @Id
     @Column(name = "author_email")
     private String authorEmail;
 
-    @Column(name = "community_id")
-    private String communityId;
+     */
+
+    @Column(name = "community_id",nullable = false)
+    private Long communityId;
 
     private String content;
 
@@ -24,9 +34,6 @@ public class EcoAction {
     private Float carbonSavings;
 
     @ManyToOne
-    @JoinColumns({
-            @JoinColumn(name = "author_email", referencedColumnName = "member_email", insertable = false, updatable = false),
-            @JoinColumn(name = "community_id", referencedColumnName = "id", insertable = false, updatable = false)
-    })
+    @JoinColumn(name = "community_id", referencedColumnName = "id", insertable = false, updatable = false)
     private Community community;
 }

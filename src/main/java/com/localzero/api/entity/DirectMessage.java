@@ -1,25 +1,28 @@
 package com.localzero.api.entity;
 
 /**
- * @author: Adrian
+ * @author: Adrian , Emil
  */
 
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Entity
 @Data
-@IdClass(DirectMessageId.class)
+//@IdClass(DirectMessageId.class)
 public class DirectMessage {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+
     @Column(name = "sender_email", nullable = false)
     private String senderEmail;
 
-    @Id
+
     @Column(name = "receiver_email", nullable = false)
     private String receiverEmail;
 
@@ -37,9 +40,11 @@ public class DirectMessage {
     @Column(name = "creation_datetime", nullable = false)
     private LocalDateTime creationDatetime;
 }
-
+/*
 @Data
 class DirectMessageId implements Serializable {
     private String senderEmail;
     private String receiverEmail;
 }
+
+ */
