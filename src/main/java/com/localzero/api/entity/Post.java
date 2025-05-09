@@ -31,7 +31,7 @@ public class Post {
     @Lob
     private byte[] image;
 
-    private int like;
+    private int likesCount;
 
     @Column(name = "creation_datetime", nullable = false)
     private LocalDateTime creationDatetime;
@@ -39,6 +39,6 @@ public class Post {
     @PrePersist
     private void onCreate() {
         creationDatetime = LocalDateTime.now();
-        like = 0;
+        likesCount = 0;
     }
 }
