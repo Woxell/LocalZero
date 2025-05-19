@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" th:href="@{/css/feedStyle.css}">
+    <link rel="stylesheet" href="/css/feedStyle.css">
 </head>
 <body>
 
@@ -20,8 +20,13 @@
 <div th:fragment="post(post)">
     <div class="feed-post">
         <div class="feed-post-header">
-            <strong th:text="${post.author.name}">Author</strong>
-            <span th:text="${#dates.format(post.creationDatetime,'yyyy-MM-dd HH:mm')}">Date</span>
+            <span th:if="${post != null and post.author != null}" th:text="${post.author.name}"></span>
+            <span th:unless="${post != null and post.author != null}">Okänd användare</span>
+            <span th:if="${post != null and post.creationDatetime != null}"
+                  th:text="${#dates.format(post.creationDatetime, 'yyyy-MM-dd HH:mm')}"></span>
+            <span th:unless="${post != null and post.creationDatetime != null}">
+    Okänt datum
+</span>
         </div>
         <div class="feed-post-content" th:text="${post.content}">Post Content</div>
         <div class="feed-actions">

@@ -6,6 +6,7 @@ package com.localzero.api.controller;
 
 import com.localzero.api.entity.Person;
 import com.localzero.api.repository.PersonRepository;
+import lombok.Data;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -36,25 +37,28 @@ public class RegistrationController {
     // Denna metod används för att hantera registrering av nya användare
     @SneakyThrows
     @PostMapping("/register")
-    public String handleRegister(
-            @RequestParam("name") String name,
-            @RequestParam("email") String email,
-            @RequestParam("password") String password,
-            @RequestParam("profilePicture") MultipartFile profilePicture
-    ) {
+    public String handleRegister(@RequestBody RegistrationRequest rq) {
         try {
             Person person = new Person();
-            person.setName(name);
-            person.setEmail(email);
-            person.setPassword("{noop}" + password); // Lägger till {noop} prefix för att undvika kryptering
-            person.setProfilePic(profilePicture.getBytes()); // Spara bilden som byte-array
+            person.setName(rq.getName());
+            person.setEmail(rq.getEmail());
+            person.setPassword("{noop}" + rq.getPassword()); // Lägger till {noop} prefix för att undvika kryptering
+            person.setProfilePic(rq.getProfilePicture()); // Spara bilden som byte-array
             personRepository.save(person);
+            System.out.println("Person saved!!!!!!!!");
             return "redirect:/login"; // Omregistrering lyckades, omdirigera till inloggning
         } catch (Exception e) {
+            System.out.println("Redirect failed!!!!!!!!");
             e.printStackTrace();
             return "error"; // Om något går fel, returnera ett felmeddelande
         }
     }
+}
 
-
+@Data
+class RegistrationRequest {
+    private String name;
+    private String email;
+    private String password;
+    private byte[] profilePicture;
 }
