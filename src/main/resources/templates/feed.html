@@ -8,11 +8,13 @@
 
 <body>
 
-<div th:replace="fragments :: navbar"></div>
-<!--
+<div th:replace="~{fragments :: navbar}"></div>
+
 <div class="feed-wrapper">
-    <div th:each="post : ${posts}" th:replace="fragments :: post(${post})"></div>
+    <div th:each="post : ${posts}">
+        <div th:if="${post != null}" th:replace="~{fragments :: post(${post})}"></div>
+    </div>
 </div>
--->
+
 </body>
 </html>

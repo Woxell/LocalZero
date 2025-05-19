@@ -74,3 +74,21 @@ body{
     font-size: 0.9rem;
     color: #222;
 }
+
+.navbar{
+    display: flex;
+    justify-content: space-between;
+    background-color: #2c3e50;
+    padding: 1rem 2rem;
+    color: white;
+}
+.navbar a{
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    margin-left: 1rem;
+}
+.navbar a:hover{
+    text-decoration: underline;
+}
+
