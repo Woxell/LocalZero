@@ -8,17 +8,21 @@ import com.localzero.api.entity.Person;
 import com.localzero.api.repository.PersonRepository;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-@RestController
+@Controller
 public class RegistrationController {
 
     @Autowired
     private PersonRepository personRepository;
+
+    @GetMapping("/register")
+    public String showRegistrationForm(Model model){
+        return "register";
+    }
 
 //    @PostMapping( "/register")
 //    public Person createPerson(@RequestBody Person person) {

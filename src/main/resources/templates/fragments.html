@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" th:href="@{/css/feedStyle.css}">
+</head>
+<body>
+
+
+<!-- Top baren -->
+<div th:fragment="navbar">
+    <nav class="navbar">
+        <a href="/" class="logo">LocalZero</a>
+        <a href="/profile">Profile</a>
+        <a href="/logout">Log Out</a>
+    </nav>
+</div>
+
+<!-- inlägg -->
+<div th:fragment="post(post)">
+    <div class="feed-post">
+        <div class="feed-post-header">
+            <strong th:text="${post.author.name}">Author</strong>
+            <span th:text="${#dates.format(post.creationDatetime,'yyyy-MM-dd HH:mm')}">Date</span>
+        </div>
+        <div class="feed-post-content" th:text="${post.content}">Post Content</div>
+        <div class="feed-actions">
+            <div class="post-likes">❤️ <span th:text="${post.likesCount}">0</span></div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
