@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>LocalZero - Feed</title>
-    <link rel="stylesheet" href="/css/feedStyle.css">
+    <link rel="stylesheet" href="/css/main.css">
 </head>
 
 <body>
@@ -12,7 +12,7 @@
 
 <div class="feed-wrapper">
     <div th:each="post : ${posts}">
-        <div th:if="${post != null}" th:replace="~{fragments :: post(${post})}"></div>
+        <div th:replace="~{fragments :: post(post=${post})}"></div>
     </div>
 </div>
 

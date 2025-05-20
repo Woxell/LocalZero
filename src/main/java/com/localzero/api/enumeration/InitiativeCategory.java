@@ -5,5 +5,6 @@ public enum InitiativeCategory {
     FOOD_SWAP,
     GARDENING,
     RECYCLING,
-    RIDE_SHARING
+    RIDE_SHARING,
+    ENVIRONMENT
 }

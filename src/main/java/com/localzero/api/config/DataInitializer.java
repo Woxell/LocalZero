@@ -1,6 +1,7 @@
 package com.localzero.api.config;
 
 import com.localzero.api.entity.*;
+import com.localzero.api.enumeration.InitiativeCategory;
 import com.localzero.api.repository.*;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
@@ -36,6 +37,11 @@ public class DataInitializer {
         Initiative initiative = new Initiative();
         initiative.setTitle("Miljöinitiativ");
         initiative.setDescription("Planterar träd i Malmö");
+        initiative.setCategory(InitiativeCategory.ENVIRONMENT);
+        initiative.setLocation("Malmö");
+        initiative.setStartDate(LocalDateTime.now().plusDays(1));
+        initiative.setEndDate(LocalDateTime.now().plusDays(10));
+        initiative.setPublic(true);
         initiative.setCreator(person);
         initiative.setCommunity(community);
         initiative.setCommunityMember(person);
