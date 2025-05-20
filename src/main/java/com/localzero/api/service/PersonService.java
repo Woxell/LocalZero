@@ -37,4 +37,9 @@ public class PersonService implements UserDetailsService {
     public Person findByEmail(String email) {
         return personRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("User not found"));
     }
+
+    public Optional<Person> findOptionalByEmail(String email) {
+        return personRepository.findById(email);
+    }
+
 }

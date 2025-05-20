@@ -7,7 +7,6 @@
 <body>
 
 
-<!-- Top baren -->
 <div th:fragment="navbar">
     <nav class="navbar">
         <a href="/profile">Profile</a>
@@ -18,7 +17,6 @@
     </nav>
 </div>
 
-<!-- Profil -->
 <div th:fragment="profile(user, posts)">
     <div class="profile-container">
         <div class="profile-card">
@@ -38,20 +36,29 @@
     </div>
 </div>
 
-<!-- inlägg -->
 <div th:fragment="post(post)">
     <div class="feed-post">
         <div class="feed-post-header">
             <span th:if="${post != null and post.author != null}" th:text="${post.author.name}"></span>
-            <span th:unless="${post != null and post.author != null}">Okänd användare</span>
-
+            <span th:unless="${post != null and post.author != null}">Unknown user</span>
         </div>
+
         <div class="feed-post-content" th:text="${post.content}">Post Content</div>
+
         <div class="feed-actions">
-            <div class="post-likes">❤️ <span th:text="${post.likesCount}">0</span></div>
+            <form th:action="@{/posts/{id}/like(id=${post.id})}" method="post" style="display:inline;">
+                <input type ="hidden" name="source" th:value="${source}"/>
+                <button type="submit" class="like-button">❤️</button>
+                <span th:text="${post.likesCount}">0</span>
+            </form>
+        </div>
+
+        <div class="post-footer">
+            <span th:text="${#temporals.format(post.creationDatetime, 'yyyy-MM-dd HH:mm')}"></span>
         </div>
     </div>
 </div>
+
 
 </body>
 </html>

@@ -12,6 +12,7 @@ body {
     background-repeat: no-repeat;
     background-position: center;
     background-size: cover;
+    font-family: 'Segoe UI', sans-serif;
 }
 
 .navbar {
@@ -21,19 +22,19 @@ body {
     width: 100%;
     z-index: 1000;
     display: flex;
-    justify-content: space-between;
-    align-items: center;
+    flex-wrap: wrap; /* Möjliggör radbrytning */
+    justify-content: center; /* Centrera innehåll i flera rader */
+    gap: 1rem;
     background-color: #2c3e50;
     padding: 1rem 2rem;
     color: white;
-    gap: 1rem;
-    flex-wrap: wrap;
 }
+
 .navbar a {
     color: white;
     text-decoration: none;
     font-weight: bold;
-    margin-left: 1rem;
+    margin-left: 0.5rem;
 }
 .navbar a:hover {
     text-decoration: underline;
@@ -50,6 +51,26 @@ body {
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
 }
 
+
+.like-button{
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.2rem;
+    padding: 0;
+}
+
+.like-button:hover{
+    tansform: scale(1.1);
+}
+
+.post-footer{
+    text-align: right;
+    font-size: 0.8rem;
+    color: #555;
+    margin-top: 0.5rem;
+}
+
 .feed-post {
     background: rgba(255, 255, 255, 0.15);
     border-radius: 10px;
@@ -64,13 +85,13 @@ body {
     justify-content: space-between;
     margin-bottom: 0.5rem;
     font-size: 0.9rem;
-    color: #333;
+    color: #000000;
 }
 
 .feed-post-content {
     font-size: 1rem;
     line-height: 1.4;
-    color: #111;
+    color: #000000;
 }
 
 .feed-post img {
@@ -162,3 +183,55 @@ button {
 button:hover {
     background-color: white;
 }
+
+.profile-container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 2rem;
+    margin-top: 3rem;
+    flex-wrap: wrap;
+    padding: 0 2rem;
+}
+
+.profile-card {
+    background-color: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-radius: 15px;
+    padding: 2rem 3rem;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.25);
+    width: 100%;
+    max-width: 350px;
+    color: #000000;
+}
+
+
+.profile-card h1 {
+    margin-top: 0;
+    font-size: 1.8rem;
+    color: #000000;
+}
+
+.profile-card p {
+    font-size: 1rem;
+    margin: 0.5rem 0;
+    color: #000000;
+}
+
+.profile-card strong {
+    color: #222;
+}
+
+.user-posts {
+    flex: 1;
+    max-width: 800px;
+    min-width: 300px;
+}
+
+.user-posts h2 {
+    color: #222;
+    margin-bottom: 1rem;
+}
+

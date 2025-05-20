@@ -8,10 +8,7 @@ import com.localzero.api.service.PostService;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 
@@ -31,7 +28,7 @@ public class PostController {
     }
 
     @PostMapping("/create-post")
-    public  String createPost(@RequestParam String content, @AuthenticationPrincipal UserDetails currentUser) {
+    public String createPost(@RequestParam String content, @AuthenticationPrincipal UserDetails currentUser) {
         if (currentUser == null) {
             return "redirect:/login";
         }
@@ -44,4 +41,24 @@ public class PostController {
         postService.save(post);
         return "redirect:/feed";
     }
+
+
+    @PostMapping("/posts/{id}/like")
+    public String likePost(@PathVariable long id,
+                           @RequestParam String source,
+                           @AuthenticationPrincipal UserDetails currentUser) {
+        if (currentUser == null) {
+            return "redirect:/login";
+        }
+
+        postService.incrementLikes(id);
+
+        if ("feed".equals(source)) {
+            return "redirect:/feed";
+        } else {
+            String email = currentUser.getUsername();
+            return "redirect:/profile/" + email;
+        }
+    }
+
 }

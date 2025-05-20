@@ -21,4 +21,10 @@ public class PostService {
     public Post save(Post post){
         return postRepository.save(post);
     }
+
+    public void incrementLikes(long postId){
+        Post post = postRepository.findById(postId).orElseThrow();
+        post.setLikesCount(post.getLikesCount()+1);
+        postRepository.save(post);
+    }
 }

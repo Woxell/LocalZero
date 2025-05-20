@@ -11,6 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/profile")
@@ -35,19 +36,23 @@ public class ProfileController {
 
         model.addAttribute("user", user);
         model.addAttribute("posts", posts);
+        model.addAttribute("source", "profile");
         return "profile";
     }
 
     @GetMapping("/{email}")
     public String OtherProfile(@PathVariable String email, Model model) {
-        Person user = personService.findByEmail(email);
-        if (user == null) {
+        Optional<Person> optionalUser = personService.findOptionalByEmail(email);
+
+        if (optionalUser.isEmpty()) {
             model.addAttribute("message", "Användaren med e-post '" + email + "' hittades inte.");
             return "user-not-found";
         }
+        Person user = optionalUser.get();
         List<Post> posts = postService.getPostsByAuthorEmail(email);
         model.addAttribute("user", user);
         model.addAttribute("posts", posts);
+        model.addAttribute("source", "profile");
         return "profiles";
     }
 
