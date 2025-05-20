@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="/css/feedStyle.css">
+    <link rel="stylesheet" href="/css/feed.css">
 </head>
 <body>
 
@@ -13,6 +13,7 @@
         <a href="/feed" class="logo">LocalZero</a>
         <a href="/profile">Profile</a>
         <a href="/initiatives/new">Skapa initiativ</a>
+        <a href="/messages">Direct Messages</a>
         <a href="/logout">Log Out</a>
     </nav>
 </div>
@@ -40,6 +41,17 @@
         <div class="feed-actions">
             <div class="post-likes">❤️ <span th:text="${post.likesCount}">0</span></div>
         </div>
+    </div>
+</div>
+
+
+<div th:fragment="chat">
+    <div class="chat-area">
+        <!-- Chat messages will go here -->
+    </div>
+    <div class="chat-input">
+        <textarea placeholder="Type a message..."></textarea>
+        <button>Send</button>
     </div>
 </div>
 

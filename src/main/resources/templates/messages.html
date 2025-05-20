@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>LocalZero - Direct Messages</title>
+    <link rel="stylesheet" href="/css/dm.css">
+</head>
+<body>
+
+<div th:replace="~{fragments :: navbar}"></div>
+
+<div class="messages-layout">
+    <div class="dm-container">
+        <h1>Direct Messages</h1>
+        <div class="dm-list">
+            <div class="dm-item" th:each="message : ${messages}">
+                <div class="dm-header">
+                    <span th:text="${message.sender.name}">Sender Name</span>
+                    <span th:text="${message.timestamp}">Timestamp</span>
+                </div>
+                <div class="dm-content" th:text="${message.content}">Message Content</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="chat-container">
+        <div th:replace="~{fragments :: chat}"></div>
+    </div>
+</div>
+</body>
+</html>

@@ -33,7 +33,7 @@ public class FeedController {
         model.addAttribute("name", person.getName()); // Lägg till det riktiga namnet i modellen
 
         model.addAttribute("posts",posts);
-        return "feed"; // feed.html kommer att använda detta
+        return "feed";
     }
 
 }

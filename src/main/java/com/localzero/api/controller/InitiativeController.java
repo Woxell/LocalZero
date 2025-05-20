@@ -20,27 +20,28 @@ import java.time.LocalDateTime;
 @Controller
 @RequestMapping("/initiatives")
 public class InitiativeController {
-@Autowired
+    @Autowired
     private InitiativeRepository initiativeRepository;
-@Autowired
+    @Autowired
     private PersonRepository personRepository;
 
 
-@PostMapping("/create")
+    @PostMapping("/create")
     public String createInitiative(@RequestParam String title, @RequestParam String description, Principal principal) {
-    Person person = personRepository.findByEmail(principal.getName()).orElseThrow();
-    Initiative initiative = new Initiative();
-    initiative.setTitle(title);
-    initiative.setDescription(description);
-    initiative.setCreator(person);
-    initiative.setCommunityMember(person);
-    initiative.setCreationDatetime(LocalDateTime.now());
-    initiativeRepository.save(initiative);
+        Person person = personRepository.findByEmail(principal.getName()).orElseThrow();
+        Initiative initiative = new Initiative();
+        initiative.setTitle(title);
+        initiative.setDescription(description);
+        initiative.setCreator(person);
+        initiative.setCommunityMember(person);
+        initiative.setCreationDatetime(LocalDateTime.now());
+        initiativeRepository.save(initiative);
 
-    System.out.println("Title:" + title);
-    System.out.println("Desc." + description);
-    return "redirect:/feed";
-}
+        System.out.println("Title:" + title);
+        System.out.println("Desc." + description);
+        return "redirect:/feed";
+    }
+
     @RequestMapping("/new")
     public String showCreateInitiativeForm() {
         return "create-initiative";
