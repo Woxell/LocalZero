@@ -18,5 +18,7 @@ public class PostService {
     public List<Post> getPostsByAuthorEmail(String email){
         return postRepository.findByAuthorEmailOrderByCreationDatetimeDesc(email);
     }
-
+    public Post save(Post post){
+        return postRepository.save(post);
+    }
 }

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <title>Create Post</title>
+    <link rel="stylesheet" href="/css/feedStyle.css">
+</head>
+<body>
+
+<div th:replace="fragments :: navbar"></div>
+
+<div class="form-container">
+    <h1> Create new post</h1>
+
+    <form th:action="@{/create-post}" method="post">
+        <textarea name="content" placeholder="Write your post here" required></textarea>
+        <button type="submit">Publish</button>
+    </form>
+</div>
+
+</body>
+</html>
