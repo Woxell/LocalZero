@@ -8,7 +8,7 @@
 <body>
 
 <div th:replace="fragments :: navbar"></div>
-<div th:replace="~{fragments :: profile(${user})}"></div>
+<div th:replace="~{fragments :: profile(user=${user}, posts=${posts})}"></div>
 
 
 </body>

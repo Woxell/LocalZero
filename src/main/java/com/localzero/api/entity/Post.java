@@ -19,11 +19,11 @@ public class Post {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "initiative_id", nullable = false)
+    @JoinColumn(name = "initiative_id")
     private Initiative initiative;
 
     @ManyToOne
-    @JoinColumn(name = "author_email", referencedColumnName = "email", nullable = false)
+    @JoinColumn(name = "author_email", referencedColumnName = "email")
     private Person author;
 
     private String content;
@@ -33,7 +33,7 @@ public class Post {
 
     private int likesCount;
 
-    @Column(name = "creation_datetime", nullable = false)
+    @Column(name = "creation_datetime")
     private LocalDateTime creationDatetime;
 
     @PrePersist
