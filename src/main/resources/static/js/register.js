@@ -5,20 +5,22 @@ document.getElementById("submit").addEventListener('click', (event) => {
     submitForm();
 });
 
-function submitForm(){
+function submitForm() {
     console.log("Submit button clicked");
 
     const data = {
         name: document.getElementById('name').value,
         email: document.getElementById('email').value,
         password: document.getElementById('password').value,
-        pfpURL: document.getElementById('profilePicture').value
+        profilePicture: document.getElementById('profilePicture').value
     };
 
-    if(!data.name || !data.email || !data.password) {
+    if (!data.name || !data.email || !data.password) {
         alert("Please fill in all fields");
         return;
     }
+
+    console.log(data);
 
     const jsonData = JSON.stringify(data);
     fetch(baseURL + '/register', {
@@ -28,7 +30,9 @@ function submitForm(){
         },
         body: jsonData
     })
-    .then(response => {
-        //Handling response
-    })
+        .then(response => {
+            if (response.redirected) {
+                window.location.href = response.url;
+            }
+        })
 }

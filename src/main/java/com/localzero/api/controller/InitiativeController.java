@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.security.Principal;
+import java.time.LocalDateTime;
 
 @Controller
 @RequestMapping("/initiatives")
@@ -23,6 +24,8 @@ public class InitiativeController {
     private InitiativeRepository initiativeRepository;
 @Autowired
     private PersonRepository personRepository;
+
+
 @PostMapping("/create")
     public String createInitiative(@RequestParam String title, @RequestParam String description, Principal principal) {
     Person person = personRepository.findByEmail(principal.getName()).orElseThrow();
@@ -30,12 +33,18 @@ public class InitiativeController {
     initiative.setTitle(title);
     initiative.setDescription(description);
     initiative.setCreator(person);
-
+    initiative.setCommunityMember(person);
+    initiative.setCreationDatetime(LocalDateTime.now());
     initiativeRepository.save(initiative);
 
     System.out.println("Title:" + title);
     System.out.println("Desc." + description);
     return "redirect:/feed";
 }
+    @RequestMapping("/new")
+    public String showCreateInitiativeForm() {
+        return "create-initiative";
+    }
+
 
 }

@@ -30,7 +30,7 @@ public class Initiative {
     private LocalDateTime creationDatetime;
 
     @ManyToOne
-    @JoinColumn(name = "community_id", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "community_id", referencedColumnName = "id")
     private Community community;
 
     @ManyToOne

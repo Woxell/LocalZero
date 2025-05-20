@@ -19,6 +19,7 @@ public class Person {
     private String password;
 
     @Lob
+    @Basic(fetch = FetchType.LAZY)
     @Column(name = "profile_pic")
     private byte[] profilePic;
 

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/css/feedStyle.css">
+</head>
+<body>
+
+
+<!-- Top baren -->
+<div th:fragment="navbar">
+    <nav class="navbar">
+        <a href="/feed" class="logo">LocalZero</a>
+        <a href="/profile">Profile</a>
+        <a href="/initiatives/new">Skapa initiativ</a>
+        <a href="/logout">Log Out</a>
+    </nav>
+</div>
+
+<!-- Profil -->
+<div th:fragment="profile(user)">
+    <div class="profile-container">
+        <div class="profile-card">
+        <h1 th:text="'Hello,' + ${user.name} + '!'">Hello, User!</h1>
+        <p><strong>Email</strong> <span th:text="${user.email}">mail@example.com</span></p>
+        <!--<p><strong>Inlägg:</strong> <span th:text="${user.posts.size()}">0</span></p> -->
+        </div>
+    </div>
+</div>
+
+<!-- inlägg -->
+<div th:fragment="post(post)">
+    <div class="feed-post">
+        <div class="feed-post-header">
+            <span th:if="${post != null and post.author != null}" th:text="${post.author.name}"></span>
+            <span th:unless="${post != null and post.author != null}">Okänd användare</span>
+</span>
+        </div>
+        <div class="feed-post-content" th:text="${post.content}">Post Content</div>
+        <div class="feed-actions">
+            <div class="post-likes">❤️ <span th:text="${post.likesCount}">0</span></div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
