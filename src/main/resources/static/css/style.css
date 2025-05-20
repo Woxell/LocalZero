@@ -67,3 +67,72 @@ button {
 button:hover {
     background-color: white;
 }
+
+/* För create-initiative sidan */
+.create-initiative-container{
+    background-color: rgba(255,255,255,0.1);
+    border: 2px solid rgba(255,255,255,0.3);
+    border-radius: 15px;
+    backdrop-filter: blur(15px);
+    padding: 2rem;
+    width: 100%;
+    max-width: 500px;
+    margin: 2rem auto;
+    box-shadow: 0 0 15px rgba(0,0,0,0.2);
+}
+.create-initiative-container h1 {
+    text-align: center;
+    margin-bottom: 1rem;
+    color: black;
+}
+
+.create-initiative-container .input-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1rem;
+}
+
+.create-initiative-container .input-group label {
+     margin-bottom: 0.5rem;
+     font-weight: 500;
+     color: black;
+ }
+.create-initiative-container .input-group input,
+  .create-initiative-container .input-group textarea {
+      padding: 0.5rem;
+      border: none;
+      border-radius: 8px;
+      outline: none;
+  }
+
+.create-initiative-container button {
+    width: 100%;
+    padding: 0.6rem;
+    border: none;
+    border-radius: 8px;
+    background-color: #ffffffcc;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.create-initiative-container button:hover {
+    background-color: white;
+}
+
+.navbar{
+    display: flex;
+    justify-content: space-between;
+    background-color: #2c3e50;
+    padding: 1rem 2rem;
+    color: white;
+}
+.navbar a{
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    margin-left: 1rem;
+}
+.navbar a:hover{
+    text-decoration: underline;
+}

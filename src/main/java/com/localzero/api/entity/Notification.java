@@ -27,5 +27,8 @@ import java.time.LocalDateTime;
         @Column(name = "creation_datetime", nullable = false)
         private LocalDateTime creationDatetime;
 
+        @Column(name = "is_read")
+        private boolean isRead = false;
+
     }
 
