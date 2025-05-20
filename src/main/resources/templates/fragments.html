@@ -18,12 +18,21 @@
 </div>
 
 <!-- Profil -->
-<div th:fragment="profile(user)">
+<div th:fragment="profile(user, posts)">
     <div class="profile-container">
         <div class="profile-card">
         <h1 th:text="'Hello,' + ${user.name} + '!'">Hello, User!</h1>
         <p><strong>Email</strong> <span th:text="${user.email}">mail@example.com</span></p>
         <!--<p><strong>Inlägg:</strong> <span th:text="${user.posts.size()}">0</span></p> -->
+        </div>
+        <div class="user-posts">
+            <h2>Your posts</h2>
+            <div th:if="${#lists.isEmpty(posts)}">
+                <p>You have not posts yet!</p>
+            </div>
+            <div th:each="post : ${posts}">
+                <div th:replace="~{fragments :: post(post=${post})}"></div>
+            </div>
         </div>
     </div>
 </div>
@@ -34,7 +43,7 @@
         <div class="feed-post-header">
             <span th:if="${post != null and post.author != null}" th:text="${post.author.name}"></span>
             <span th:unless="${post != null and post.author != null}">Okänd användare</span>
-</span>
+
         </div>
         <div class="feed-post-content" th:text="${post.content}">Post Content</div>
         <div class="feed-actions">

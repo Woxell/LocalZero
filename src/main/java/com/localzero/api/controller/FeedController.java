@@ -28,7 +28,7 @@ public class FeedController {
         String email = authentication.getName(); // Hämta inloggad e-post
         Person person = personService.findByEmail(email); // Hämta användaren via e-post
 
-        List<Post> posts = postService.getAllPosts();
+        List<Post> posts = postService.getPostsByAuthorEmail(email);
 
         model.addAttribute("name", person.getName()); // Lägg till det riktiga namnet i modellen
 
