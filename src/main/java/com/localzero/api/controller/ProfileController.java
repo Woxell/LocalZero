@@ -53,7 +53,7 @@ public class ProfileController {
         model.addAttribute("user", user);
         model.addAttribute("posts", posts);
         model.addAttribute("source", "profile");
-        return "profiles";
+        return "profile";
     }
 
 }
