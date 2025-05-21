@@ -5,6 +5,10 @@
     font-family: 'Segoe UI', sans-serif;
 }
 
+*{
+    font-family: 'Segoe UI', sans-serif;
+}
+
 body {
     min-height: 100vh;
     padding-top: 70px;
