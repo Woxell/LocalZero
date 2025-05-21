@@ -22,9 +22,9 @@ import java.time.LocalDateTime;
 @Controller
 @RequestMapping("/initiatives")
 public class InitiativeController {
-@Autowired
+    @Autowired
     private InitiativeRepository initiativeRepository;
-@Autowired
+    @Autowired
     private PersonRepository personRepository;
 
 
