@@ -40,7 +40,7 @@ public class PostCreator extends template.AbstractCreator<Post> {
     public Post create(String email, String content,Long initiativeId){
         Post post = super.create(email,content);
         if (initiativeId != null){
-            Initiative initiative = initiativeRepository.findById(initiativeId).orElseThrow();
+            Initiative initiative = initiativeRepository.findById(initiativeId).orElseThrow(()->new IllegalArgumentException("The initiative does not exist!"));
             post.setInitiative(initiative);
         }
         return postRepo.save(post);

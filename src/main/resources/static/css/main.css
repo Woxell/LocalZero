@@ -239,3 +239,10 @@ button:hover {
     margin-bottom: 1rem;
 }
 
+.post-ball {
+    border-radius: 15px;
+    background-color: rgba(141, 68, 68, 0.6);
+    padding: 4px 10px;
+    font-size: 0.9em;
+}
+
