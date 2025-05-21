@@ -5,7 +5,7 @@ import com.localzero.api.entity.Post;
 
 import java.time.LocalDateTime;
 
-public abstract class AbstractCreator<T extends LocalDateTime> {
+public abstract class AbstractCreator<T extends TimeStampEntry> {
 
     public final T create(String email, String content){
         Person user = loadUser(email);
