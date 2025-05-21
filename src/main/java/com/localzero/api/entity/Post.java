@@ -7,12 +7,13 @@ package com.localzero.api.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import template.TimeStampEntry;
 
 import java.time.LocalDateTime;
 
 @Entity
 @Data
-public class Post {
+public class Post implements TimeStampEntry{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -41,4 +42,6 @@ public class Post {
         creationDatetime = LocalDateTime.now();
         likesCount = 0;
     }
+
+    
 }
