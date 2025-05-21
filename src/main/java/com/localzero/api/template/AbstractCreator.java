@@ -2,6 +2,7 @@ package template;
 
 import com.localzero.api.entity.Person;
 import com.localzero.api.entity.Post;
+import com.localzero.api.template.TimeStampEntry;
 
 import java.time.LocalDateTime;
 
