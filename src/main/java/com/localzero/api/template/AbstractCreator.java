@@ -1,6 +1,9 @@
-package com.localzero.api.template;
+package template;
 
 import com.localzero.api.entity.Person;
+import com.localzero.api.entity.Post;
+
+import java.time.LocalDateTime;
 
 public abstract class AbstractCreator<T extends TimeStampEntry> {
 

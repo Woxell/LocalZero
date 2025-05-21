@@ -16,4 +16,9 @@ public interface DirectMessageRepository extends JpaRepository<DirectMessage, Lo
     """)
     //OR för att se båda Conversations
     List<DirectMessage> findConversationBetween(String user1, String user2);
+
+    List<DirectMessage> findByReceiverEmail(String receiverEmail);
+
+    List<DirectMessage> findBySenderEmail(String senderEmail);
+
 }
