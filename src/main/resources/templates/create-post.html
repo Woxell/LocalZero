@@ -14,6 +14,13 @@
 
     <form th:action="@{/create-post}" method="post">
         <textarea name="content" placeholder="Write your post here" required></textarea>
+
+
+        <label for="initiativeId">Choose Initiative (Optional):</label>
+        <select name="initiativeId" id="initiativeId">
+            <option value="">-None-</option>
+            <option th:each="i : ${initiatives}" th:value="${i.id}" th:text="${i.title}"></option>
+        </select>
         <button type="submit">Publish</button>
     </form>
 </div>

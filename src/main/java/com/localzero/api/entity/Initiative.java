@@ -10,6 +10,8 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Data
@@ -55,5 +57,13 @@ public class Initiative {
     @ManyToOne
     @JoinColumn(name = "communitymember_email", referencedColumnName = "email", nullable = false)
     private Person communityMember;
+
+    @ManyToMany
+    @JoinTable(
+            name = "initiative_participant",
+            joinColumns = @JoinColumn(name = "initiative_id"),
+            inverseJoinColumns = @JoinColumn(name = "participant_email")
+    )
+    private Set<Person> participants = new HashSet<>();
 
 }
