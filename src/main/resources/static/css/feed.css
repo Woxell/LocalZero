@@ -1,0 +1,94 @@
+body{
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI',sans-serif;
+    background-image: url("https://www.psdstack.com/wp-content/uploads/2019/08/copyright-free-images-750x420.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    min-height: 100vh;
+}
+
+.feed-wrapper{
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 1rem;
+    background-color: rgba(255,255,255,0.1);
+    border: 2px solid rgba(255,255,255,0.3);
+    border-radius: 15px;
+    backdrop-filter: blur(15px);
+    box-shadow: 0 0 20px rgba(0,0,0,0.2);
+}
+
+.feed-post{
+    background: rgba(255,255,255,0.15);
+    border-radius: 10px;
+    margin-bottom: 1rem;
+    padding: 1rem;
+    color: black;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.feed-post-header{
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+    color: #333;
+}
+
+.feed-post-content{
+    font-size: 1rem;
+    line-height: 1.4;
+    color: #111;
+}
+
+.feed-post img{
+    max-width: 100%;
+    border-radius: 8px;
+    margin-top: 0.5rem;
+}
+
+.feed-actions{
+    margin-top: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.feed-actions button{
+    background-color: #ffffffcc;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
+.feed-actions button:hover{
+    background-color: white;
+}
+
+.likes-count{
+    font-size: 0.9rem;
+    color: #222;
+}
+
+.navbar{
+    display: flex;
+    justify-content: space-between;
+    background-color: #2c3e50;
+    padding: 1rem 2rem;
+    color: white;
+}
+.navbar a{
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    margin-left: 1rem;
+}
+.navbar a:hover{
+    text-decoration: underline;
+}
+

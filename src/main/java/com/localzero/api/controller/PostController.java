@@ -1,28 +1,22 @@
 package com.localzero.api.controller;
 
 
-import com.localzero.api.entity.Person;
-import com.localzero.api.entity.Post;
-import com.localzero.api.service.PersonService;
 import com.localzero.api.service.PostService;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-
-import java.time.LocalDateTime;
+import org.springframework.web.bind.annotation.*;
+import com.localzero.api.template.PostCreator;
 
 @Controller
 public class PostController {
     private final PostService postService;
-    private final PersonService personService;
+    private final PostCreator pCreator;
 
-    public PostController(PostService postService, PersonService personService) {
+    public PostController(PostService postService, PostCreator pCreator) {
         this.postService = postService;
-        this.personService = personService;
+        this.pCreator = pCreator;
+
     }
 
     @GetMapping("/create-post")
@@ -31,17 +25,32 @@ public class PostController {
     }
 
     @PostMapping("/create-post")
-    public  String createPost(@RequestParam String content, @AuthenticationPrincipal UserDetails currentUser) {
+    public String createPost(@RequestParam String content, @AuthenticationPrincipal UserDetails currentUser) {
         if (currentUser == null) {
             return "redirect:/login";
         }
-        Person author = personService.findByEmail(currentUser.getUsername());
-        Post post = new Post();
-        post.setContent(content);
-        post.setAuthor(author);
-        post.setCreationDatetime(LocalDateTime.now());
+        pCreator.create(currentUser.getUsername(), content);
 
-        postService.save(post);
         return "redirect:/feed";
     }
+
+
+    @PostMapping("/posts/{id}/like")
+    public String likePost(@PathVariable long id,
+                           @RequestParam String source,
+                           @AuthenticationPrincipal UserDetails currentUser) {
+        if (currentUser == null) {
+            return "redirect:/login";
+        }
+
+        postService.incrementLikes(id);
+
+        if ("feed".equals(source)) {
+            return "redirect:/feed";
+        } else {
+            String email = currentUser.getUsername();
+            return "redirect:/profile/" + email;
+        }
+    }
+
 }

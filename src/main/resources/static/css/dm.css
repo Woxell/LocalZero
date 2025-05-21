@@ -1,0 +1,74 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background-image: url("https://www.psdstack.com/wp-content/uploads/2019/08/copyright-free-images-750x420.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    min-height: 100vh;
+    overflow: hidden;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    background-color: #2c3e50;
+    padding: 1rem 2rem;
+    color: white;
+}
+
+.navbar a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    margin-left: 1rem;
+}
+
+.navbar a:hover {
+    text-decoration: underline;
+}
+
+.messages-layout {
+    display: flex;
+    height: calc(100vh - 60px); /* Full height minus navbar */
+    overflow: hidden; /* Prevent layout scrolling */
+}
+
+.dm-container {
+    width: 30%;
+    border-right: 1px solid #ddd;
+    overflow-y: scroll;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.9);
+}
+
+.chat-container {
+    width: 70%;
+    overflow-y: scroll;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.9);
+}
+
+/* Custom scrollbar styling */
+.dm-container::-webkit-scrollbar,
+.chat-container::-webkit-scrollbar {
+    width: 8px;
+}
+
+.dm-container::-webkit-scrollbar-thumb,
+.chat-container::-webkit-scrollbar-thumb {
+    background-color: #888;
+    border-radius: 4px;
+}
+
+.dm-item {
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+    cursor: pointer;
+}
+
+.dm-item:hover {
+    background-color: #f5f5f5;
+}
+

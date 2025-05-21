@@ -30,10 +30,10 @@ public class FeedController {
 
         List<Post> posts = postService.getPostsByAuthorEmail(email);
 
-        model.addAttribute("name", person.getName()); // Lägg till det riktiga namnet i modellen
-
+        model.addAttribute("name", person.getName());
         model.addAttribute("posts",posts);
-        return "feed"; // feed.html kommer att använda detta
+        model.addAttribute("source", "feed");
+        return "feed";
     }
 
 }

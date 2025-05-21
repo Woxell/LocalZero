@@ -5,41 +5,39 @@ body {
     padding: 0;
 }
 
-/* Reuse navbar if needed */
-.navbar {
+.navbar{
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    background-color: #1e2a38;
+    background-color: #2c3e50;
     padding: 1rem 2rem;
     color: white;
 }
 
-.navbar a {
+.navbar a{
     color: white;
     text-decoration: none;
-    font-weight: 500;
+    font-weight: bold;
+    margin-left: 1rem;
 }
 
-.navbar a:hover {
+.navbar a:hover{
     text-decoration: underline;
 }
 
-/* Profile container */
 .profile-container {
     display: flex;
     justify-content: center;
     margin-top: 3rem;
 }
 
-/* Profile card */
+
 .profile-card {
     background-color: #ffffff;
     border-radius: 12px;
     padding: 2rem 3rem;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     width: 100%;
-    max-width: 500px;
+    max-width: 350px;
 }
 
 .profile-card h1 {
@@ -58,8 +56,8 @@ body {
     color: #222;
 }
 
-/* Responsive */
-@media (max-width: 600px) {
+
+@media (max-width: 350px) {
     .profile-card {
         padding: 1.5rem;
     }
