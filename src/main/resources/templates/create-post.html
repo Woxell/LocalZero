@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>Create Post</title>
     <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/post.css">
 </head>
 <body>
 
@@ -18,7 +19,7 @@
 
         <label for="initiativeId">Choose Initiative (Optional):</label>
         <select name="initiativeId" id="initiativeId">
-            <option value="">-None-</option>
+            <option value="">-Public-</option>
             <option th:each="i : ${initiatives}" th:value="${i.id}" th:text="${i.title}"></option>
         </select>
         <button type="submit">Publish</button>
