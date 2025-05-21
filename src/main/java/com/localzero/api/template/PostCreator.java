@@ -1,7 +1,9 @@
 package com.localzero.api.template;
 
+import com.localzero.api.entity.Initiative;
 import com.localzero.api.entity.Person;
 import com.localzero.api.entity.Post;
+import com.localzero.api.repository.InitiativeRepository;
 import com.localzero.api.repository.PostRepository;
 import com.localzero.api.service.PersonService;
 import org.springframework.stereotype.Service;
@@ -13,10 +15,12 @@ public class PostCreator extends template.AbstractCreator<Post> {
 
     private final PostRepository postRepo;
     private final PersonService personService;
+    private final InitiativeRepository initiativeRepository;
 
-    public PostCreator(PostRepository postRepo, PersonService personService){
+    public PostCreator(PostRepository postRepo, PersonService personService, InitiativeRepository initiativeRepository){
         this.postRepo = postRepo;
         this.personService = personService;
+        this.initiativeRepository = initiativeRepository;
     }
 
     @Override
@@ -29,7 +33,17 @@ public class PostCreator extends template.AbstractCreator<Post> {
         Post post = new Post();
         post.setAuthor(user);
         post.setContent(content);
+        post.setLikesCount(0);
         return post;
+    }
+
+    public Post create(String email, String content,Long initiativeId){
+        Post post = super.create(email,content);
+        if (initiativeId != null){
+            Initiative initiative = initiativeRepository.findById(initiativeId).orElseThrow();
+            post.setInitiative(initiative);
+        }
+        return postRepo.save(post);
     }
 
     @Override

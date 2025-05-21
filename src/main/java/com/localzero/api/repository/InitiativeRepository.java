@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface InitiativeRepository extends JpaRepository<Initiative,Long> {
     List<Initiative> findByCreatorEmail(String email);
+    List<Initiative> findByParticipantsEmail(String email);
+
 }
