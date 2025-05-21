@@ -22,11 +22,13 @@ public class InitiativeCreator extends AbstractInitiativeCreator {
         return ps.findByEmail(email);
     }
 
+
     @Override
     protected void initiativedetailer(Person user, Initiative initiative) {
         initiative.setCreator(user);
         initiative.setCommunity(user.getCommunity());
         initiative.setCommunityMember(user);
+        initiative.getParticipants().add(user);
     }
 
     @Override

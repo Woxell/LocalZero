@@ -18,7 +18,7 @@ public class InitiativeService {
     }
 
     public List<Initiative> getByParticipant(String email){
-        return ir.findByParticipantsEmail(email);
+        return ir.findByParticipantEmail(email);
     }
     public Initiative getById(Long id){
         return ir.findById(id).orElseThrow();

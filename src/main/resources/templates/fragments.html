@@ -43,6 +43,8 @@
         <div class="feed-post-header">
             <span th:if="${post != null and post.author != null}" th:text="${post.author.name}"></span>
             <span th:unless="${post != null and post.author != null}">Unknown user</span>
+
+            <span th:if="${post.initiative != null}" th:text="' i ' + ${post.initiative.title}"></span>
         </div>
 
         <div class="feed-post-content" th:text="${post.content}">Post Content</div>

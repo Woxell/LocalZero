@@ -23,13 +23,13 @@ public class DataInitializer {
         // Skapa och spara community först
         Community community = new Community();
         community.setMemberEmail("test@example.com");
-        community = communityRepository.save(community); // <- Viktigt!
+        community = communityRepository.save(community);
 
         // Skapa och spara person
         Person person = new Person();
         person.setEmail("test@example.com");
         person.setName("Test Användare");
-        person.setPassword("{noop}"+"password");
+        person.setPassword("{noop}password");
         person.setCommunity(community);
         person = personRepository.save(person);
 
@@ -46,7 +46,11 @@ public class DataInitializer {
         initiative.setCommunity(community);
         initiative.setCommunityMember(person);
         initiative.setCreationDatetime(LocalDateTime.now());
+
+        // ⚠️ Viktigt: spara först, sedan lägg till deltagare
         initiative = initiativeRepository.save(initiative);
+        initiative.getParticipants().add(person);
+        initiative = initiativeRepository.save(initiative); // spara igen med deltagare
 
         // Skapa och spara post
         Post post = new Post();
@@ -57,5 +61,4 @@ public class DataInitializer {
         post.setLikesCount(0);
         postRepository.save(post);
     }
-
 }
