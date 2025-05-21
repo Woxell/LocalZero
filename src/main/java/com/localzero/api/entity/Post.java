@@ -7,7 +7,7 @@ package com.localzero.api.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import template.TimeStampEntry;
+import com.localzero.api.template.TimeStampEntry;
 
 import java.time.LocalDateTime;
 

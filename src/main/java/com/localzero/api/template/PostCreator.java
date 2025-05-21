@@ -1,4 +1,4 @@
-package template;
+package com.localzero.api.template;
 
 import com.localzero.api.entity.Person;
 import com.localzero.api.entity.Post;

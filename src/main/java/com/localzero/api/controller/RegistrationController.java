@@ -5,14 +5,19 @@ package com.localzero.api.controller;
  */
 
 import com.localzero.api.entity.Person;
+import com.localzero.api.entity.UserRoleAssignment;
+import com.localzero.api.enumeration.UserRole;
 import com.localzero.api.repository.PersonRepository;
 import lombok.Data;
 import lombok.SneakyThrows;
+import org.antlr.v4.runtime.misc.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @Controller
 public class RegistrationController {
@@ -63,4 +68,5 @@ class RegistrationRequest {
     private String email;
     private String password;
     private byte[] profilePicture;
+    private List<UserRole> roles;
 }

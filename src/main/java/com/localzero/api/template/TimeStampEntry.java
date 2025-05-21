@@ -1,4 +1,4 @@
-package template;
+package com.localzero.api.template;
 
 import java.time.LocalDateTime;
 

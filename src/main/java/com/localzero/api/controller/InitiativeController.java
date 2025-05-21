@@ -10,11 +10,14 @@ import com.localzero.api.enumeration.InitiativeCategory;
 import com.localzero.api.repository.InitiativeRepository;
 import com.localzero.api.repository.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import com.localzero.api.template.InitiativeCreator;
 
 import java.security.Principal;
 import java.time.LocalDateTime;
@@ -22,13 +25,20 @@ import java.time.LocalDateTime;
 @Controller
 @RequestMapping("/initiatives")
 public class InitiativeController {
+
+    private final InitiativeCreator ic;
+
+    public InitiativeController(InitiativeCreator ic){
+        this.ic = ic;
+    }
+
 @Autowired
     private InitiativeRepository initiativeRepository;
 @Autowired
     private PersonRepository personRepository;
 
 
-@PostMapping("/create")
+    @PostMapping("/create")
     public String createInitiative(@RequestParam String title,
                                    @RequestParam String description,
                                    @RequestParam String location,
@@ -36,28 +46,21 @@ public class InitiativeController {
                                    @RequestParam String endDate,
                                    @RequestParam InitiativeCategory category,
                                    @RequestParam(required = false, defaultValue = "false") boolean isPublic,
-                                   Principal principal
-) {
-    Person person = personRepository.findByEmail(principal.getName()).orElseThrow();
-    Initiative initiative = new Initiative();
-    initiative.setTitle(title);
-    initiative.setDescription(description);
-    initiative.setLocation(location);
-    initiative.setStartDate(LocalDateTime.parse(startDate));
-    initiative.setEndDate(LocalDateTime.parse(endDate));
-    initiative.setCategory(category);
-    initiative.setPublic(isPublic);
-    initiative.setCreator(person);
-    initiative.setCommunityMember(person);
-    initiative.setCommunity(person.getCommunity());
-    initiative.setCreationDatetime(LocalDateTime.now());
-    initiativeRepository.save(initiative);
+                                   @AuthenticationPrincipal UserDetails user) {
 
-    System.out.println("Title:" + title);
-    System.out.println("Desc." + description);
-    return "redirect:/feed";
-}
-    @RequestMapping("/new")
+        Initiative initiative = new Initiative();
+        initiative.setTitle(title);
+        initiative.setDescription(description);
+        initiative.setLocation(location);
+        initiative.setStartDate(LocalDateTime.parse(startDate));
+        initiative.setEndDate(LocalDateTime.parse(endDate));
+        initiative.setCategory(category);
+        initiative.setPublic(isPublic);
+
+        ic.create(user.getUsername(), initiative);
+
+        return "redirect:/feed";
+    }    @RequestMapping("/new")
     public String showCreateInitiativeForm(Model model) {
     model.addAttribute("categories", InitiativeCategory.values());
         return "create-initiative";

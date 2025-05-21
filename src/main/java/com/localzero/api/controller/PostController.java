@@ -1,25 +1,22 @@
 package com.localzero.api.controller;
 
 
-import com.localzero.api.entity.Person;
-import com.localzero.api.entity.Post;
-import com.localzero.api.service.PersonService;
 import com.localzero.api.service.PostService;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-
-import java.time.LocalDateTime;
+import com.localzero.api.template.PostCreator;
 
 @Controller
 public class PostController {
     private final PostService postService;
-    private final PersonService personService;
+    private final PostCreator pCreator;
 
-    public PostController(PostService postService, PersonService personService) {
+    public PostController(PostService postService, PostCreator pCreator) {
         this.postService = postService;
-        this.personService = personService;
+        this.pCreator = pCreator;
+
     }
 
     @GetMapping("/create-post")
@@ -32,13 +29,8 @@ public class PostController {
         if (currentUser == null) {
             return "redirect:/login";
         }
-        Person author = personService.findByEmail(currentUser.getUsername());
-        Post post = new Post();
-        post.setContent(content);
-        post.setAuthor(author);
-        post.setCreationDatetime(LocalDateTime.now());
+        pCreator.create(currentUser.getUsername(), content);
 
-        postService.save(post);
         return "redirect:/feed";
     }
 
