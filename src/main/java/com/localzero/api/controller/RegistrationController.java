@@ -43,7 +43,9 @@ public class RegistrationController {
             person.setName(rq.getName());
             person.setEmail(rq.getEmail());
             person.setPassword("{noop}" + rq.getPassword()); // Lägger till {noop} prefix för att undvika kryptering
-            person.setProfilePic(rq.getProfilePicture()); // Spara bilden som byte-array
+            if (person.getProfilePic() != null && person.getProfilePic().length == 0) {
+                person.setProfilePic(null);
+            }
             personRepository.save(person);
             System.out.println("Person saved!!!!!!!!");
             return "redirect:/login"; // Omregistrering lyckades, omdirigera till inloggning

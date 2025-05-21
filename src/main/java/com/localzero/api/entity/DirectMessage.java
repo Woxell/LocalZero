@@ -41,7 +41,7 @@ public class DirectMessage {
     private LocalDateTime creationDatetime;
 
     @Lob
-    @Column(name = "imagge_data")
+    @Column(name = "image_data")
     private byte[] imageData;
 }
 /*
