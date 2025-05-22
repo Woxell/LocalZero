@@ -1,11 +1,15 @@
 {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Segoe UI', sans-serif;
+    margin: 0
+;
+    padding: 0
+;
+    box-sizing: border-box
+;
+    font-family: 'Segoe UI', sans-serif
+;
 }
 
-*{
+* {
     font-family: 'Segoe UI', sans-serif;
 }
 
@@ -40,6 +44,7 @@ body {
     font-weight: bold;
     margin-left: 0.5rem;
 }
+
 .navbar a:hover {
     text-decoration: underline;
 }
@@ -105,7 +110,7 @@ body {
     background-color: #f5f5f5;
 }
 
-.like-button{
+.like-button {
     background: none;
     border: none;
     cursor: pointer;
@@ -113,11 +118,11 @@ body {
     padding: 0;
 }
 
-.like-button:hover{
+.like-button:hover {
     tansform: scale(1.1);
 }
 
-.post-footer{
+.post-footer {
     text-align: right;
     font-size: 0.8rem;
     color: #555;
@@ -169,6 +174,7 @@ body {
     font-weight: bold;
     transition: background-color 0.3s;
 }
+
 .feed-actions button:hover {
     background-color: white;
 }
@@ -180,14 +186,14 @@ body {
 
 .form-container,
 .create-initiative-container {
-    background-color: rgba(255,255,255,0.1);
-    border: 2px solid rgba(255,255,255,0.3);
+    background-color: rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(255, 255, 255, 0.3);
     border-radius: 15px;
     backdrop-filter: blur(15px);
     padding: 2rem;
     max-width: 350px;
     margin: 2rem auto;
-    box-shadow: 0 0 15px rgba(0,0,0,0.2);
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
 }
 
 .form-container h1,
@@ -295,3 +301,62 @@ button:hover {
     font-size: 0.9em;
 }
 
+.initiative-islands {
+    display: flex;
+    justify-content: space-between;
+    gap: 2rem;
+    flex-wrap: wrap;
+}
+
+.card-box {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 16px;
+    padding: 1.5rem;
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    color: black;
+    min-width: 300px;
+}
+
+.initiative-left-island {
+    flex: 2;
+}
+
+.initiative-right-island {
+    flex: 1;
+    align-self: flex-start;
+}
+
+.participant-card {
+    border-top: 1px solid currentColor;
+    margin-top: 0.5rem;
+    padding-top: 0.5rem;
+}
+
+.feed-wrapper-container{
+    display: flex;
+    justify-content: space-between;
+    gap: 2rem;
+    padding: 2rem;
+    flex-wrap: wrap;
+}
+.initiative-info-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 2rem;
+    flex-wrap: wrap;
+}
+
+.initiative-details,
+.initiative-participants {
+    flex: 1;
+    min-width: 250px;
+}
+.post-form-wrapper{
+    align-self: flex-start;
+    max-width: 400px;
+    width: 100%;
+    height: auto;
+}

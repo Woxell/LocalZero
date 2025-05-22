@@ -2,26 +2,83 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Initiative Details</title>
+    <title th:text="${initiative.title}">Initiative Details</title>
     <link rel="stylesheet" href="/css/main.css">
 </head>
 <body>
+
+<!-- ✅ NAVBAR -->
 <div th:replace="~{fragments :: navbar}"></div>
 
-<div class="feed-wrapper">
-    <h2 th:text="${initiative.title}">Initiative title</h2>
-    <p th:text="${initiative.description}">Description</p>
-    <p><strong>Plats:</strong> <span th:text="${initiative.location}">Location</span></p>
-    <p><strong>Start:</strong> <span th:text="${#temporals.format(initiative.startDate, 'yyyy-MM-dd HH:mm')}"></span></p>
-    <p><strong>Slut:</strong> <span th:text="${#temporals.format(initiative.endDate, 'yyyy-MM-dd HH:mm')}"></span></p>
-    <p><strong>Kategori:</strong> <span th:text="${initiative.category}">Category</span></p>
+<!-- 🧱 FLEX-CONTAINER för båda feed-wrappers -->
+<div class="feed-wrapper-container">
 
-    <div th:if="${isParticipant}">
-        <p style="color: green;">You're in this initiative</p>
+    <div class="feed-wrapper" style="flex: 2;">
+        <div class="card-box">
+
+            <!-- RAD 1: Initiative + Participants sida vid sida -->
+            <div class="initiative-info-row">
+                <!-- Initiative Info -->
+                <div class="initiative-details">
+                    <h2 th:text="${initiative.title}">Initiative Title</h2>
+                    <p th:text="${initiative.description}">Description</p>
+                    <p><strong>Location:</strong> <span th:text="${initiative.location}">Location</span></p>
+                    <p><strong>Category:</strong> <span th:text="${initiative.category}">Category</span></p>
+                    <p><strong>Start:</strong> <span th:text="${#temporals.format(initiative.startDate, 'yyyy-MM-dd HH:mm')}"></span></p>
+                    <p><strong>End:</strong> <span th:text="${#temporals.format(initiative.endDate, 'yyyy-MM-dd HH:mm')}"></span></p>
+
+                    <div th:if="${isParticipant}">
+                        <p style="color: green;">You're in this initiative</p>
+                    </div>
+                    <form th:if="${!isParticipant}" th:action="@{'/initiatives/' + ${initiative.id} + '/join'}" method="post">
+                        <button type="submit">Join Initiative</button>
+                    </form>
+                </div>
+
+                <!-- Participants -->
+                <div class="initiative-participants">
+                    <h3>Participants (<span th:text="${#lists.size(initiative.participants)}">0</span>)</h3>
+                    <ul>
+                        <li th:each="p : ${initiative.participants}" class="participant-card">
+                            <span th:text="${p.name}">Participant Name</span><br/>
+                            <small>Role: Participant</small>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- RAD 2: Posts -->
+            <div class="initiative-posts" style="margin-top: 2rem;">
+                <h3>Posts</h3>
+                <div th:if="${posts.isEmpty()}">
+                    <p>No posts yet.</p>
+                </div>
+                <div th:each="post : ${posts}" style="margin-bottom: 1.5rem;">
+                    <div style="border-top: 1px solid currentColor; padding-top: 1rem;">
+                        <p><strong th:text="${post.author.name}">Author</strong></p>
+                        <p th:text="${post.content}">Post content</p>
+                        <p style="font-size: 0.9rem; font-weight: bold;" th:text="${#temporals.format(post.creationDatetime, 'yyyy-MM-dd HH:mm')}"></p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
     </div>
-    <form th:if="${!isParticipant}" th:action="@{'/initiatives/' + ${initiative.id} + '/join'}" method="post">
-        <button type="submit">Join Initiative</button>
-    </form>
+
+    <!-- 🟦 HÖGER FEED-WRAPPER (Add a new post) -->
+    <div class="feed-wrapper post-form-wrapper" style="flex: 1;">
+        <div class="card-box">
+            <h3>Add a new post</h3>
+            <form th:action="@{/create-post}" method="post">
+                <input type="hidden" name="initiativeId" th:value="${initiative.id}" />
+                <textarea name="content" placeholder="Write your update..." rows="6" required
+                          style="width: 100%; margin-bottom: 1rem;"></textarea>
+                <button type="submit">Post</button>
+            </form>
+        </div>
+    </div>
+
 </div>
+
 </body>
 </html>

@@ -41,6 +41,10 @@ public class PostController {
         }
         pCreator.create(currentUser.getUsername(), content, initiativeId);
 
+        if(initiativeId != null){
+            return "redirect:/initiatives/"+initiativeId;
+        }
+
         return "redirect:/feed";
     }
 
