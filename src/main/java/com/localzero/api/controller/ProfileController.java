@@ -1,27 +1,34 @@
 package com.localzero.api.controller;
 
+import com.localzero.api.entity.Community;
 import com.localzero.api.entity.Person;
 import com.localzero.api.entity.Post;
+import com.localzero.api.repository.CommunityRepository;
 import com.localzero.api.service.PersonService;
 import com.localzero.api.service.PostService;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Controller
 @RequestMapping("/profile")
 public class ProfileController {
     private final PersonService personService;
     private final PostService postService;
+    private final CommunityRepository communityRepository;
 
-    public ProfileController(PersonService personService, PostService postService) {
+    public ProfileController(PersonService personService, PostService postService, CommunityRepository communityRepository) {
         this.personService = personService;
         this.postService = postService;
+        this.communityRepository = communityRepository;
     }
 
     @GetMapping
@@ -36,6 +43,7 @@ public class ProfileController {
 
         model.addAttribute("user", user);
         model.addAttribute("posts", posts);
+        model.addAttribute("allCommunities", communityRepository.findAll());
         model.addAttribute("source", "profile");
         return "profile";
     }
@@ -52,8 +60,19 @@ public class ProfileController {
         List<Post> posts = postService.getPostsByAuthorEmail(email);
         model.addAttribute("user", user);
         model.addAttribute("posts", posts);
+        model.addAttribute("allCommunities", communityRepository.findAll());
         model.addAttribute("source", "profile");
         return "profile";
+    }
+
+    @PostMapping("/communities")
+    public String updateCommunities(@RequestParam List<Long> communityIds, Authentication authentication) {
+        String email = authentication.getName();
+        Person user = personService.findByEmail(email);
+        Set<Community> selected = new HashSet<>(communityRepository.findAllById(communityIds));
+        user.setCommunities(selected);
+        personService.save(user);
+        return "redirect:/profile";
     }
 
 }

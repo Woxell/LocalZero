@@ -4,41 +4,50 @@
     <meta charset="UTF-8">
     <title>Initiative Creator</title>
     <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/initiative.css">
 </head>
 <body>
 <div th:replace="fragments :: navbar"></div>
 
 <div class="create-initiative-container">
-<h2>Create an Initiative!</h2>
-<form th:action="@{/initiatives/create}" method="post">
-    <label for="title">Title: </label><br>
-    <input type="text" name="title" id="title" required><br><br>
+    <h2>Create an Initiative!</h2>
+    <form th:action="@{/initiatives/create}" method="post">
+        <label for="title">Title: </label><br>
+        <input type="text" name="title" id="title" required><br><br>
 
-    <label for="description">Description:</label><br>
-    <textarea name="description"  id="description" required></textarea><br><br>
+        <label for="description">Description:</label><br>
+        <textarea name="description"  id="description" required></textarea><br><br>
 
-    <label for="location">Location:</label><br>
-    <input type="text" name="location" id="location" required><br><br>
+        <label for="location">Location:</label><br>
+        <input type="text" name="location" id="location" required><br><br>
 
-    <label for="startDate">Start Date and time:</label><br>
-    <input type="datetime-local" name="startDate" id="startDate" required><br><br>
+        <label for="startDate">Start Date and time:</label><br>
+        <input type="datetime-local" name="startDate" id="startDate" required><br><br>
 
-    <label for="endDate">End Date and time:</label><br>
-    <input type="datetime-local" name="endDate" id="endDate" required><br><br>
+        <label for="endDate">End Date and time:</label><br>
+        <input type="datetime-local" name="endDate" id="endDate" required><br><br>
 
-    <label for="category">Category:</label><br>
-    <select name="category" id="category" required>
-        <option th:each="cat : ${categories}"
-                th:value="${cat}"
-                th:text="${cat}"
-        ></option>
-    </select><br><br>
+        <label for="category">Category:</label><br>
+        <select name="category" id="category" required>
+            <option th:each="cat : ${categories}"
+                    th:value="${cat}"
+                    th:text="${cat}"
+            ></option>
+        </select><br><br>
 
-    <label for="isPublic">Public Initiative?</label>
-    <input type="checkbox" name="isPublic" id="isPublic" value="true"><br><br>
+        <label for="isPublic">Public Initiative?</label>
+        <input type="checkbox" name="isPublic" id="isPublic" value="true"><br><br>
 
-    <button type="submit">Create Initiative</button>
-</form>
+        <label for="communities">Select Communities:</label><br>
+        <select name="communityIds" id="communities" multiple size="3">
+            <option th:each="c : ${allCommunities}"
+                    th:value="${c.id}"
+                    th:text="${c.memberEmail}">
+            </option>
+        </select><br><br>
+
+        <button type="submit">Create Initiative</button>
+    </form>
 </div>
 </body>
 </html>

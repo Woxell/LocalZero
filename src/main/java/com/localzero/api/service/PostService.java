@@ -15,16 +15,25 @@ public class PostService {
         this.postRepository = postRepository;
     }
 
-    public List<Post> getPostsByAuthorEmail(String email){
+    public List<Post> getPostsByAuthorEmail(String email) {
         return postRepository.findByAuthorEmailOrderByCreationDatetimeDesc(email);
     }
-    public Post save(Post post){
+
+    public Post save(Post post) {
         return postRepository.save(post);
     }
 
-    public void incrementLikes(long postId){
+    public List<Post> getAllStandalonePosts() {
+        return postRepository.findByInitiativeIsNullOrderByCreationDatetimeDesc();
+    }
+
+    public List<Post> getPostsByInitiativeId(Long initiativeId) {
+        return postRepository.findByInitiativeIdOrderByCreationDatetimeDesc(initiativeId);
+    }
+
+    public void incrementLikes(long postId) {
         Post post = postRepository.findById(postId).orElseThrow();
-        post.setLikesCount(post.getLikesCount()+1);
+        post.setLikesCount(post.getLikesCount() + 1);
         postRepository.save(post);
     }
 }

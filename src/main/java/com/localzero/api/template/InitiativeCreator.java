@@ -25,12 +25,15 @@ public class InitiativeCreator extends AbstractInitiativeCreator {
     @Override
     protected void initiativedetailer(Person user, Initiative initiative) {
         initiative.setCreator(user);
-        initiative.setCommunity(user.getCommunity());
         initiative.setCommunityMember(user);
+        initiative.getParticipants().add(user);
     }
 
     @Override
     protected Initiative save(Initiative initiative) {
-        return ir.save(initiative);
+        Initiative saved = ir.save(initiative);
+        System.out.println(" SPARAT: ID=" + saved.getId() + " - " + saved.getTitle());
+        return saved;
     }
 }
+
