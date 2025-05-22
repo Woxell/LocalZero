@@ -11,6 +11,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -37,4 +38,13 @@ public class PersonService implements UserDetailsService {
     public Person findByEmail(String email) {
         return personRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("User not found"));
     }
+
+    public List<Person> findAll() {
+        return personRepository.findAll();
+    }
+
+    public Optional<Person> findOptionalByEmail(String email) {
+        return personRepository.findById(email);
+    }
+
 }

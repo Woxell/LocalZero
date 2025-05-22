@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <title>LocalZero - Direct Messages</title>
+    <link rel="stylesheet" href="/css/main.css">
     <link rel="stylesheet" href="/css/dm.css">
+    <script src="/js/dm.js" defer></script>
 </head>
 <body>
 
@@ -11,20 +13,25 @@
 
 <div class="messages-layout">
     <div class="dm-container">
+        <button class="new-chat-btn" onclick="openNewChatDialog()">New Chat</button>
         <h1>Direct Messages</h1>
         <div class="dm-list">
-            <div class="dm-item" th:each="message : ${messages}">
-                <div class="dm-header">
-                    <span th:text="${message.sender.name}">Sender Name</span>
-                    <span th:text="${message.timestamp}">Timestamp</span>
-                </div>
-                <div class="dm-content" th:text="${message.content}">Message Content</div>
-            </div>
+            <!-- existing dm-list content -->
         </div>
     </div>
 
     <div class="chat-container">
         <div th:replace="~{fragments :: chat}"></div>
+    </div>
+</div>
+
+<div class="dialog-backdrop" id="dialogBackdrop"></div>
+<div class="new-chat-dialog" id="newChatDialog">
+    <h2>Who do you want to chat with?</h2>
+    <div th:if="${persons != null}">
+        <div th:each="person : ${persons}" class="person-item"  th:attr="onclick='startChat(\'' + ${person.email} + '\')'">
+            <span th:text="${person?.name}">Person Name</span>
+        </div>
     </div>
 </div>
 </body>
