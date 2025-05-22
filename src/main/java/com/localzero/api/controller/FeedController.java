@@ -12,8 +12,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
+
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Controller
 @AllArgsConstructor
@@ -28,29 +31,40 @@ public class FeedController {
         String email = authentication.getName();
         Person person = personService.findByEmail(email);
 
-        // 1. Hämta initiativ användaren deltar i
-        List<Initiative> initiatives = initiativeService.getByParticipant(email);
+        List<Initiative> myInitiatives = initiativeService.getByParticipant(email);
 
-        // 2. Hämta poster från initiativen
-        List<Post> postsFromInitiatives = new ArrayList<>();
-        for (Initiative initiative : initiatives) {
-            postsFromInitiatives.addAll(postService.getPostsByInitiativeId(initiative.getId()));
+        List<Post> postsFromMyInitiatives = new ArrayList<>();
+        for (Initiative initiative : myInitiatives) {
+            postsFromMyInitiatives.addAll(postService.getPostsByInitiativeId(initiative.getId()));
         }
 
-        // 3. Hämta alla enskilda poster (utan initiativ)
         List<Post> allStandalonePosts = postService.getAllStandalonePosts();
 
-        // 4. Kombinera och sortera
+        Set<Long> myInitiativeIds = new HashSet<>();
+        for (Initiative i : myInitiatives) {
+            myInitiativeIds.add(i.getId());
+        }
+
+        List<Initiative> visibleInitiatives = initiativeService.getPublicOrByCommunities(person.getCommunities());
+
+
+        List<Post> postsFromVisibleInitiatives = new ArrayList<>();
+        for (Initiative initiative : visibleInitiatives) {
+            if (!myInitiativeIds.contains(initiative.getId())) {
+                postsFromVisibleInitiatives.addAll(postService.getPostsByInitiativeId(initiative.getId()));
+            }
+        }
+
         List<Post> combinedPosts = new ArrayList<>();
-        combinedPosts.addAll(postsFromInitiatives);
+        combinedPosts.addAll(postsFromMyInitiatives);
+        combinedPosts.addAll(postsFromVisibleInitiatives);
         combinedPosts.addAll(allStandalonePosts);
         combinedPosts.sort((a, b) -> b.getCreationDatetime().compareTo(a.getCreationDatetime()));
 
-        // 🧪 Debug
         System.out.println("==== FEED DEBUG ====");
         System.out.println("Användare: " + email);
-        System.out.println("Deltar i initiativ: " + initiatives.size());
-        for (Initiative i : initiatives) {
+        System.out.println("Deltar i initiativ: " + myInitiatives.size());
+        for (Initiative i : myInitiatives) {
             System.out.println(" → " + i.getTitle());
         }
         System.out.println("Totalt antal inlägg i feed: " + combinedPosts.size());
@@ -59,7 +73,6 @@ public class FeedController {
                     " | initiativ: " + (p.getInitiative() != null ? p.getInitiative().getTitle() : "Enskild"));
         }
 
-        // 5. Skicka till vy
         model.addAttribute("name", person.getName());
         model.addAttribute("posts", combinedPosts);
         model.addAttribute("source", "feed");

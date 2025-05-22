@@ -1,10 +1,13 @@
 package com.localzero.api.service;
 
+import com.localzero.api.entity.Community;
 import com.localzero.api.entity.Initiative;
 import com.localzero.api.repository.InitiativeRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
+
 @Service
 public class InitiativeService {
     private final InitiativeRepository ir;
@@ -23,4 +26,20 @@ public class InitiativeService {
     public Initiative getById(Long id){
         return ir.findById(id).orElseThrow();
     }
+
+
+
+    public List<Initiative> getAllPublic() {
+        return ir.findByIsPublicTrue();
+    }
+
+    public List<Initiative> getPublicOrByCommunity(Community community) {
+        return ir.findByIsPublicTrueOrCommunitiesContaining(community);
+    }
+
+    public List<Initiative> getPublicOrByCommunities(Set<Community> communities) {
+        return ir.findByIsPublicTrueOrCommunitiesIn(communities);
+    }
+
+
 }
