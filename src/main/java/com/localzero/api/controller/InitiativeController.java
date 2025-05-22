@@ -14,16 +14,14 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
-import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/initiatives")
@@ -69,14 +67,19 @@ public class InitiativeController {
         return "redirect:/feed";
     }
     @GetMapping("/feed")
-    public String showPublicInitiatives(Model model) {
-        List<Initiative> publicInitiatives = initiativeService.getAll().stream()
-                .filter(Initiative::isPublic)
-                .toList();
-        model.addAttribute("initiatives", publicInitiatives);
+    public String showInitiatives(Model model, @AuthenticationPrincipal UserDetails currentUser) {
+        Person person = personRepository.findByEmail(currentUser.getUsername()).orElseThrow();
+        List<Initiative> Initiatives = initiativeService.getVisibleForUser(person);
+        Initiatives = Initiatives.stream().filter(Objects::nonNull).toList();
+        List<Initiative> myInitiatives = initiativeService.getByParticipant(person.getEmail());
+
+        Set<Long> joinedInitativeIds = myInitiatives.stream().map(Initiative::getId).collect(Collectors.toSet());
+        
+        model.addAttribute("initiatives", Initiatives);
+        model.addAttribute("joinedInitiativeIds", joinedInitativeIds);
+
         return "initiative-feed";
     }
-
 
     @GetMapping("/new")
     public String showCreateInitiativeForm(Model model) {
@@ -84,4 +87,22 @@ public class InitiativeController {
         model.addAttribute("allCommunities", communityRepository.findAll());
         return "create-initiative";
     }
+
+    @GetMapping("/{id}")
+    public String showEditInitiativeForm(@PathVariable Long id, Model model, @AuthenticationPrincipal UserDetails currentUser) {
+        Initiative initiative = initiativeService.getById(id);
+        Person person = personRepository.findByEmail(currentUser.getUsername()).orElseThrow();
+        boolean isParticipant = initiative.getParticipants().stream().anyMatch(p -> p.getEmail().equals(person.getEmail()));
+
+        model.addAttribute("initiative", initiative);
+        model.addAttribute("isParticipant", isParticipant);
+        return "initiative-view";
+    }
+
+    @PostMapping("/{id}/join")
+    public String joinInitiavtive(@PathVariable Long id, @AuthenticationPrincipal UserDetails currentUser) {
+        initiativeService.addParticipant(id, currentUser.getUsername());
+        return "redirect:/initiatives/" + id;
+    }
+
 }

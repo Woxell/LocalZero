@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Initiative Details</title>
+    <link rel="stylesheet" href="/css/main.css">
+</head>
+<body>
+<div th:replace="~{fragments :: navbar}"></div>
+
+<div class="feed-wrapper">
+    <h2 th:text="${initiative.title}">Initiative title</h2>
+    <p th:text="${initiative.description}">Description</p>
+    <p><strong>Plats:</strong> <span th:text="${initiative.location}">Location</span></p>
+    <p><strong>Start:</strong> <span th:text="${#temporals.format(initiative.startDate, 'yyyy-MM-dd HH:mm')}"></span></p>
+    <p><strong>Slut:</strong> <span th:text="${#temporals.format(initiative.endDate, 'yyyy-MM-dd HH:mm')}"></span></p>
+    <p><strong>Kategori:</strong> <span th:text="${initiative.category}">Category</span></p>
+
+    <div th:if="${isParticipant}">
+        <p style="color: green;">You're in this initiative</p>
+    </div>
+    <form th:if="${!isParticipant}" th:action="@{'/initiatives/' + ${initiative.id} + '/join'}" method="post">
+        <button type="submit">Join Initiative</button>
+    </form>
+</div>
+</body>
+</html>
