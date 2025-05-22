@@ -50,9 +50,13 @@ public class Initiative {
     @Column(name = "creation_datetime", nullable = false)
     private LocalDateTime creationDatetime;
 
-    @ManyToOne
-    @JoinColumn(name = "community_id", referencedColumnName = "id")
-    private Community community;
+    @ManyToMany
+    @JoinTable(
+            name = "initiative_community",
+            joinColumns = @JoinColumn(name = "initiative_id"),
+            inverseJoinColumns = @JoinColumn(name = "community_id")
+    )
+    private Set<Community> communities = new HashSet<>();
 
     @ManyToOne
     @JoinColumn(name = "communitymember_email", referencedColumnName = "email", nullable = false)

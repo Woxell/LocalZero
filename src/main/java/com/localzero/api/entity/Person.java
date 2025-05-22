@@ -7,6 +7,9 @@ package com.localzero.api.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Entity
 @Data
 public class Person {
@@ -23,7 +26,6 @@ public class Person {
     @Column(name = "profile_pic")
     private byte[] profilePic;
 
-    @ManyToOne
-    @JoinColumn(name = "community_id", referencedColumnName = "id")
-    private Community community;
+    @ManyToMany
+    private Set<Community> communities = new HashSet<>();
 }

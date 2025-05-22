@@ -42,4 +42,7 @@ public class PersonService implements UserDetailsService {
         return personRepository.findById(email);
     }
 
+    public void save(Person person) {
+        personRepository.save(person);
+    }
 }

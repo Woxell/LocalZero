@@ -6,12 +6,11 @@
 </head>
 <body>
 
-
 <div th:fragment="navbar">
     <nav class="navbar">
         <a href="/profile">Profile</a>
         <a href="/messages">Direct Messages</a>
-        <a href="/initiative/feed">Initiatives</a>
+        <a href="/initiatives/feed">Initiatives</a>
         <a href="/feed">Feed</a>
         <a href="/initiatives/new">Create initiative</a>
         <a href="/create-post">Create post</a>
@@ -22,12 +21,28 @@
 <div th:fragment="profile(user, posts)">
     <div class="profile-container">
         <div class="profile-card">
-        <h1 th:text="'Hello,' + ${user.name} + '!'">Hello, User!</h1>
-        <p><strong>Email</strong> <span th:text="${user.email}">mail@example.com</span></p>
-        <!--<p><strong>Inlägg:</strong> <span th:text="${user.posts.size()}">0</span></p> -->
+            <h1 th:text="'Hello,' + ${user.name} + '!'">Hello, User!</h1>
+            <p><strong>Email</strong> <span th:text="${user.email}">mail@example.com</span></p>
+
+            <form th:action="@{/profile/communities}" method="post">
+                <label>Your Communities:</label><br>
+                <div th:each="c : ${allCommunities}">
+                    <label>
+                        <input type="checkbox"
+                               name="communityIds"
+                               th:value="${c.id}"
+                               th:checked="${user.communities.contains(c)}" />
+                        <span th:text="${c.memberEmail}"></span>
+                    </label><br>
+                </div>
+                <br>
+                <button type="submit">Update Communities</button>
+            </form>
         </div>
+
         <div class="user-posts">
             <h2>Your posts</h2>
+
             <div th:if="${#lists.isEmpty(posts)}">
                 <p>You have not posts yet!</p>
             </div>
@@ -62,7 +77,6 @@
         </div>
     </div>
 </div>
-
 
 <div th:fragment="chat">
     <div class="chat-area">
