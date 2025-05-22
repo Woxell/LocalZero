@@ -69,13 +69,13 @@ public class InitiativeController {
     @GetMapping("/feed")
     public String showInitiatives(Model model, @AuthenticationPrincipal UserDetails currentUser) {
         Person person = personRepository.findByEmail(currentUser.getUsername()).orElseThrow();
-        List<Initiative> Initiatives = initiativeService.getVisibleForUser(person);
-        Initiatives = Initiatives.stream().filter(Objects::nonNull).toList();
+        List<Initiative> initiatives = initiativeService.getVisibleForUser(person);
+        initiatives = initiatives.stream().filter(Objects::nonNull).toList();
         List<Initiative> myInitiatives = initiativeService.getByParticipant(person.getEmail());
 
         Set<Long> joinedInitativeIds = myInitiatives.stream().map(Initiative::getId).collect(Collectors.toSet());
         
-        model.addAttribute("initiatives", Initiatives);
+        model.addAttribute("initiatives", initiatives);
         model.addAttribute("joinedInitiativeIds", joinedInitativeIds);
 
         return "initiative-feed";
@@ -100,7 +100,7 @@ public class InitiativeController {
     }
 
     @PostMapping("/{id}/join")
-    public String joinInitiavtive(@PathVariable Long id, @AuthenticationPrincipal UserDetails currentUser) {
+    public String joinInitiative(@PathVariable Long id, @AuthenticationPrincipal UserDetails currentUser) {
         initiativeService.addParticipant(id, currentUser.getUsername());
         return "redirect:/initiatives/" + id;
     }
