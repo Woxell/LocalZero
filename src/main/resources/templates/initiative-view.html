@@ -9,6 +9,10 @@
 
 <div th:replace="~{fragments :: navbar}"></div>
 
+<div th:if="${errorMessage}" style="color:red; font-weight: bold; margin: 1rem;">
+    <p th:text="${errorMessage}">Något gick fel.</p>
+</div>
+
 <div class="feed-wrapper-container">
 
     <div class="feed-wrapper" style="flex: 2;">
@@ -17,62 +21,90 @@
             <div class="initiative-info-row">
                 <div class="initiative-details">
                     <h2 th:text="${initiative.title}">Initiative Title</h2>
+                    <div th:if="${error}" style="color: red; margin-bottom: 1rem;">
+                        <p th:text="${error}"></p>
+                    </div>
                     <p th:text="${initiative.description}">Description</p>
                     <p><strong>Location:</strong> <span th:text="${initiative.location}">Location</span></p>
                     <p><strong>Category:</strong> <span th:text="${initiative.category}">Category</span></p>
                     <p><strong>Start:</strong> <span th:text="${#temporals.format(initiative.startDate, 'yyyy-MM-dd HH:mm')}"></span></p>
                     <p><strong>End:</strong> <span th:text="${#temporals.format(initiative.endDate, 'yyyy-MM-dd HH:mm')}"></span></p>
 
+                    <!-- Visa status och knappar baserat på om användaren är deltagare eller inte/ behövdes eftersom v skulle skilja på Admin och andra rooller -->
+                    <!-- Ffärer ser dåliit ut, fixa sen -->
                     <div th:if="${isParticipant}">
-                        <p style="color: green;">You're in this initiative</p>
-                        <form th:action="@{'/initiatives/' + ${initiative.id} + '/leave'}" method="post">
-                            <button type="submit" style="color: red;">Leave Initiative</button>
+                        <p style="color: green;">Du är med i detta initiativ</p>
+                        <!-- Visa endast leave-knappen om användaren INTE är skaparen -->
+                        <form th:if="${!isCreator}"
+                              th:action="@{'/initiatives/' + ${initiative.id} + '/leave'}" method="post">
+                            <button type="submit" style="color: red;">Lämna initiativ</button>
                         </form>
+                        <div th:if="${isCreator}" style="color: gray;">
+                            <em>Som skapare kan du inte lämna detta initiativ.</em>
+                        </div>
                     </div>
 
-                    <form th:if="${!isParticipant}" th:action="@{'/initiatives/' + ${initiative.id} + '/join'}" method="post">
-                        <button type="submit">Join Initiative</button>
-                    </form>
+                    <!-- Visa join-knappen endast om användaren INTE är deltagare -->
+                    <div th:if="${!isParticipant}">
+                        <p style="color: orange;">Du är inte med i detta initiativ</p>
+                        <form th:action="@{'/initiatives/' + ${initiative.id} + '/join'}" method="post">
+                            <button type="submit" style="background-color: green; color: white;">Gå med i initiativ</button>
+                        </form>
+                    </div>
                 </div>
 
                 <!-- Participants -->
                 <div class="initiative-participants">
-                    <h3>Participants (<span th:text="${#lists.size(initiative.participants)}">0</span>)</h3>
+                    <h3>Deltagare (<span th:text="${#lists.size(participantsWithRoles)}">0</span>)</h3>
                     <ul>
-                        <li th:each="p : ${initiative.participants}" class="participant-card">
-                            <span th:text="${p.name}">Participant Name</span><br/>
-                            <small>Role: Participant</small>
+                        <li th:each="participant : ${participantsWithRoles}" class="participant-card">
+                            <span th:text="${participant.person.name}">Participant Name</span>
+                            <span th:if="${participant.person.email == initiative.creator.email}" style="color: gold;">(Skapare)</span><br/>
+                            <small>Roll: <span th:text="${participant.role}">Unknown</span></small>
+
+                            <!-- Endast skaparen kan ändra roller, och inte sin egen -->
+                            <form th:if="${isCreator} and ${participant.person.email != initiative.creator.email}"
+                                  th:action="@{'/initiatives/' + ${initiative.id} + '/roles'}"
+                                  method="post" style="margin-top: 5px;">
+                                <input type="hidden" name="targetEmail" th:value="${participant.person.email}" />
+                                <select name="newRole">
+                                    <option value="MEMBER" th:selected="${participant.role.name() == 'MEMBER'}">MEMBER</option>
+                                    <option value="RESIDENT" th:selected="${participant.role.name() == 'RESIDENT'}">RESIDENT</option>
+                                    <option value="ORGANIZER" th:selected="${participant.role.name() == 'ORGANIZER'}">ORGANIZER</option>
+                                    <!-- ADMIN-rollen är inte tillgänglig för andra än skaparen -->
+                                </select>
+                                <button type="submit" style="font-size: 12px;">Ändra roll</button>
+                            </form>
                         </li>
                     </ul>
                 </div>
-            </div>
 
-
-            <div class="initiative-posts" style="margin-top: 2rem;">
-                <h3>Posts</h3>
-                <div th:if="${posts.isEmpty()}">
-                    <p>No posts yet.</p>
-                </div>
-                <div th:each="post : ${posts}" style="margin-bottom: 1.5rem;">
-                    <div style="border-top: 1px solid currentColor; padding-top: 1rem;">
-                        <p><strong th:text="${post.author.name}">Author</strong></p>
-                        <p th:text="${post.content}">Post content</p>
-                        <p style="font-size: 0.9rem; font-weight: bold;" th:text="${#temporals.format(post.creationDatetime, 'yyyy-MM-dd HH:mm')}"></p>
+                <div class="initiative-posts" style="margin-top: 2rem;">
+                    <h3>Inlägg</h3>
+                    <div th:if="${posts.isEmpty()}">
+                        <p>Inga inlägg än.</p>
+                    </div>
+                    <div th:each="post : ${posts}" style="margin-bottom: 1.5rem;">
+                        <div style="border-top: 1px solid currentColor; padding-top: 1rem;">
+                            <p><strong th:text="${post.author.name}">Author</strong></p>
+                            <p th:text="${post.content}">Post content</p>
+                            <p style="font-size: 0.9rem; font-weight: bold;" th:text="${#temporals.format(post.creationDatetime, 'yyyy-MM-dd HH:mm')}"></p>
+                        </div>
                     </div>
                 </div>
-            </div>
 
+            </div>
         </div>
     </div>
 
     <div class="feed-wrapper post-form-wrapper" style="flex: 1;">
         <div class="card-box">
-            <h3>Add a new post</h3>
+            <h3>Lägg till nytt inlägg</h3>
             <form th:action="@{/create-post}" method="post">
                 <input type="hidden" name="initiativeId" th:value="${initiative.id}" />
-                <textarea name="content" placeholder="Write your update..." rows="6" required
+                <textarea name="content" placeholder="Skriv din uppdatering..." rows="6" required
                           style="width: 100%; margin-bottom: 1rem;"></textarea>
-                <button type="submit">Post</button>
+                <button type="submit">Publicera</button>
             </form>
         </div>
     </div>
