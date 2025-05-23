@@ -11,18 +11,33 @@
 <div th:replace="fragments :: navbar"></div>
 
 <div class="form-container">
-    <h1> Create new post</h1>
+    <h1>Create New Post</h1>
 
     <form th:action="@{/create-post}" method="post">
-        <textarea name="content" placeholder="Write your post here" required></textarea>
-
+        <label for="content">Post content:</label>
+        <textarea name="content" id="content" placeholder="Write your post here" required></textarea>
 
         <label for="initiativeId">Choose Initiative (Optional):</label>
         <select name="initiativeId" id="initiativeId">
-            <option value="">-Public-</option>
+            <option value="">- Public -</option>
             <option th:each="i : ${initiatives}" th:value="${i.id}" th:text="${i.title}"></option>
         </select>
-        <button type="submit">Publish</button>
+
+        <br><br>
+        <h3>Optional: Log an Eco Action</h3>
+
+        <label for="ecoContent">Eco Action:</label>
+        <select name="ecoContent" id="ecoContent">
+            <option value="">-- None --</option>
+            <option value="Biked to work">Biked to work</option>
+            <option value="Used reusable bags">Used reusable bags</option>
+            <option value="Composted food waste">Composted food waste</option>
+            <option value="Recycled electronics">Recycled electronics</option>
+            <option value="Took public transport">Took public transport</option>
+        </select>
+
+        <br><br>
+        <button type="submit">Publish Post</button>
     </form>
 </div>
 

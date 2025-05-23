@@ -3,10 +3,12 @@ package com.localzero.api.controller;
 import com.localzero.api.entity.Community;
 import com.localzero.api.entity.Initiative;
 import com.localzero.api.entity.Person;
+import com.localzero.api.entity.Post;
 import com.localzero.api.enumeration.InitiativeCategory;
 import com.localzero.api.repository.CommunityRepository;
 import com.localzero.api.repository.InitiativeRepository;
 import com.localzero.api.repository.PersonRepository;
+import com.localzero.api.repository.PostRepository;
 import com.localzero.api.service.InitiativeService;
 import com.localzero.api.template.InitiativeCreator;
 import lombok.RequiredArgsConstructor;
@@ -33,6 +35,7 @@ public class InitiativeController {
     private final PersonRepository personRepository;
     private final CommunityRepository communityRepository;
     private final InitiativeService initiativeService;
+    private final PostRepository postRepository;
 
     @PostMapping("/create")
     public String createInitiative(@RequestParam String title,
@@ -42,7 +45,8 @@ public class InitiativeController {
                                    @RequestParam String endDate,
                                    @RequestParam InitiativeCategory category,
                                    @RequestParam(required = false, defaultValue = "false") boolean isPublic,
-                                   @RequestParam List<Long> communityIds,
+                                   @RequestParam(required = false) List<Long> communityIds,
+                                   
                                    @AuthenticationPrincipal UserDetails user) {
 
         Initiative initiative = new Initiative();
@@ -59,8 +63,11 @@ public class InitiativeController {
         initiative.setCommunityMember(creator);
 
 
-        Set<Community> selectedCommunities = new HashSet<>(communityRepository.findAllById(communityIds));
+        Set<Community> selectedCommunities = (communityIds != null)
+                ? new HashSet<>(communityRepository.findAllById(communityIds))
+                : new HashSet<>();
         initiative.setCommunities(selectedCommunities);
+
 
         ic.create(user.getUsername(), initiative);
 
@@ -73,10 +80,10 @@ public class InitiativeController {
         initiatives = initiatives.stream().filter(Objects::nonNull).toList();
         List<Initiative> myInitiatives = initiativeService.getByParticipant(person.getEmail());
 
-        Set<Long> joinedInitativeIds = myInitiatives.stream().map(Initiative::getId).collect(Collectors.toSet());
+        Set<Long> joinedInitiativeIds = myInitiatives.stream().map(Initiative::getId).collect(Collectors.toSet());
         
         model.addAttribute("initiatives", initiatives);
-        model.addAttribute("joinedInitiativeIds", joinedInitativeIds);
+        model.addAttribute("joinedInitiativeIds", joinedInitiativeIds);
 
         return "initiative-feed";
     }
@@ -96,12 +103,21 @@ public class InitiativeController {
 
         model.addAttribute("initiative", initiative);
         model.addAttribute("isParticipant", isParticipant);
+        List<Post> posts = postRepository.findByInitiativeIdOrderByCreationDatetimeDesc(initiative.getId());
+        model.addAttribute("posts",posts);
         return "initiative-view";
     }
 
     @PostMapping("/{id}/join")
     public String joinInitiative(@PathVariable Long id, @AuthenticationPrincipal UserDetails currentUser) {
         initiativeService.addParticipant(id, currentUser.getUsername());
+        return "redirect:/initiatives/" + id;
+    }
+
+    @PostMapping("/{id}/leave")
+    public String leaveInitiative(@PathVariable Long id,
+                                  @AuthenticationPrincipal UserDetails currentUser) {
+        initiativeService.removeParticipant(id, currentUser.getUsername());
         return "redirect:/initiatives/" + id;
     }
 

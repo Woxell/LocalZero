@@ -10,6 +10,8 @@ import lombok.Data;
 import com.localzero.api.template.TimeStampEntry;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Data
@@ -43,5 +45,11 @@ public class Post implements TimeStampEntry{
         likesCount = 0;
     }
 
-    
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<PostComment> comments = new ArrayList<>();
+
+    @OneToOne
+    @JoinColumn(name = "eco_action_id")
+    private EcoAction ecoAction;
+
 }

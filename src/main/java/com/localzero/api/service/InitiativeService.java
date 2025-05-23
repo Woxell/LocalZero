@@ -5,6 +5,7 @@ import com.localzero.api.entity.Initiative;
 import com.localzero.api.entity.Person;
 import com.localzero.api.repository.InitiativeRepository;
 import org.springframework.stereotype.Service;
+import com.localzero.api.repository.PersonRepository;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -15,10 +16,14 @@ import java.util.Set;
 public class InitiativeService {
     private final InitiativeRepository ir;
     private final PersonService personService;
+    private final InitiativeRepository initiativeRepository;
+    private final PersonRepository personRepository;
 
-    public InitiativeService(InitiativeRepository ir, PersonService personService){
+    public InitiativeService(InitiativeRepository ir, PersonService personService, InitiativeRepository initiativeRepository, PersonRepository personRepository){
         this.ir = ir;
         this.personService = personService;
+        this.initiativeRepository = initiativeRepository;
+        this.personRepository = personRepository;
     }
 
     public List<Initiative> getAll(){
@@ -60,6 +65,14 @@ public class InitiativeService {
         Person person = personService.findByEmail(email);
         initiative.getParticipants().add(person);
         ir.save(initiative);
+    }
+
+    public void removeParticipant(Long initiativeId, String userEmail) {
+        Initiative initiative = initiativeRepository.findById(initiativeId).orElseThrow();
+        Person person = personRepository.findByEmail(userEmail).orElseThrow();
+
+        initiative.getParticipants().remove(person);
+        initiativeRepository.save(initiative);
     }
 
 }

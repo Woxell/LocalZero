@@ -35,13 +35,3 @@ public class PostComment {
     private LocalDateTime creationDatetime;
 
 }
-/*
-@AllArgsConstructor
-@NoArgsConstructor
-
- */
-@Data
-class PostCommentId implements Serializable {
-    private Long postId;
-    private String memberEmail;
-}

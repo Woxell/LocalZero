@@ -1,60 +1,47 @@
 package com.localzero.api.template;
 
+import com.localzero.api.entity.EcoAction;
 import com.localzero.api.entity.Initiative;
 import com.localzero.api.entity.Person;
 import com.localzero.api.entity.Post;
 import com.localzero.api.repository.InitiativeRepository;
+import com.localzero.api.repository.PersonRepository;
 import com.localzero.api.repository.PostRepository;
-import com.localzero.api.service.PersonService;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 
-@Service
-public class PostCreator extends AbstractCreator<Post> {
+@Component
+public class PostCreator {
 
-    private final PostRepository postRepo;
-    private final PersonService personService;
+    private final PostRepository postRepository;
+    private final PersonRepository personRepository;
     private final InitiativeRepository initiativeRepository;
 
-    public PostCreator(PostRepository postRepo, PersonService personService, InitiativeRepository initiativeRepository){
-        this.postRepo = postRepo;
-        this.personService = personService;
+    public PostCreator(PostRepository postRepository, PersonRepository personRepository, InitiativeRepository initiativeRepository) {
+        this.postRepository = postRepository;
+        this.personRepository = personRepository;
         this.initiativeRepository = initiativeRepository;
     }
 
-    @Override
-    protected Person loadUser(String email) {
-        return personService.findByEmail(email);
-    }
+    public Post create(String email, String content, Long initiativeId, EcoAction ecoAction) {
+        Person person = personRepository.findByEmail(email).orElseThrow(() ->
+                new IllegalArgumentException("User not found with email: " + email));
 
-    @Override
-    protected Post build(Person user,String content) {
         Post post = new Post();
-        post.setAuthor(user);
+        post.setAuthor(person);
         post.setContent(content);
-        post.setLikesCount(0);
-        return post;
-    }
+        post.setCreationDatetime(LocalDateTime.now());
 
-    public Post create(String email, String content,Long initiativeId){
-        Post post = super.create(email,content);
-        if (initiativeId != null){
-            Initiative initiative = initiativeRepository.findById(initiativeId).orElseThrow(()->new IllegalArgumentException("The initiative does not exist!"));
+        if (initiativeId != null) {
+            Initiative initiative = initiativeRepository.findById(initiativeId).orElse(null);
             post.setInitiative(initiative);
         }
-        return postRepo.save(post);
+
+        if (ecoAction != null) {
+            post.setEcoAction(ecoAction);
+        }
+
+        return postRepository.save(post);
     }
-
-    @Override
-    protected void setTimestamps(Post entity) {
-        entity.setCreationDatetime(LocalDateTime.now());
-    }
-
-    @Override
-    protected Post persist(Post entity) {
-        return postRepo.save(entity);
-    }
-
-
 }
