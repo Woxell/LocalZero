@@ -1,37 +1,32 @@
 package com.localzero.api.entity;
 
-/**
- * @author Emil
- */
-
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Entity
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class PostComment {
 
-    @EmbeddedId
-    private PostCommentId id = new PostCommentId();
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @ManyToOne
-    @MapsId("postId")
-    @JoinColumn(name = "post_id", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "post_id", nullable = false)
     private Post post;
 
     @ManyToOne
-    @MapsId("memberEmail")
-    @JoinColumn(name = "author_email", referencedColumnName = "email", nullable = false)
+    @JoinColumn(name = "author_email", nullable = false)
     private Person author;
 
     private String content;
 
     @Column(nullable = false)
     private LocalDateTime creationDatetime;
-
 }
