@@ -45,7 +45,8 @@ public class InitiativeController {
                                    @RequestParam String endDate,
                                    @RequestParam InitiativeCategory category,
                                    @RequestParam(required = false, defaultValue = "false") boolean isPublic,
-                                   @RequestParam List<Long> communityIds,
+                                   @RequestParam(required = false) List<Long> communityIds,
+                                   
                                    @AuthenticationPrincipal UserDetails user) {
 
         Initiative initiative = new Initiative();
@@ -62,8 +63,11 @@ public class InitiativeController {
         initiative.setCommunityMember(creator);
 
 
-        Set<Community> selectedCommunities = new HashSet<>(communityRepository.findAllById(communityIds));
+        Set<Community> selectedCommunities = (communityIds != null)
+                ? new HashSet<>(communityRepository.findAllById(communityIds))
+                : new HashSet<>();
         initiative.setCommunities(selectedCommunities);
+
 
         ic.create(user.getUsername(), initiative);
 
@@ -107,6 +111,13 @@ public class InitiativeController {
     @PostMapping("/{id}/join")
     public String joinInitiative(@PathVariable Long id, @AuthenticationPrincipal UserDetails currentUser) {
         initiativeService.addParticipant(id, currentUser.getUsername());
+        return "redirect:/initiatives/" + id;
+    }
+
+    @PostMapping("/{id}/leave")
+    public String leaveInitiative(@PathVariable Long id,
+                                  @AuthenticationPrincipal UserDetails currentUser) {
+        initiativeService.removeParticipant(id, currentUser.getUsername());
         return "redirect:/initiatives/" + id;
     }
 

@@ -32,6 +32,10 @@
                     </p>
                     <p><strong>End:</strong> <span th:text="${#temporals.format(i.endDate, 'yyyy-MM-dd HH:mm')}"></span>
                     </p>
+                    <p><strong>Community:</strong></p>
+                    <ul>
+                        <li th:each="c : ${i.communities}" th:text="${c.memberEmail}"></li>
+                    </ul>
                 </div>
             </div>
         </a>

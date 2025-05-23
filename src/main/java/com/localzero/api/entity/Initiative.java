@@ -59,7 +59,7 @@ public class Initiative {
     private Set<Community> communities = new HashSet<>();
 
     @ManyToOne
-    @JoinColumn(name = "communitymember_email", referencedColumnName = "email", nullable = false)
+    @JoinColumn(name = "communitymember_email", referencedColumnName = "email")
     private Person communityMember;
 
     @ManyToMany

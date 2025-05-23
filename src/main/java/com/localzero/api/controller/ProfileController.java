@@ -66,10 +66,14 @@ public class ProfileController {
     }
 
     @PostMapping("/communities")
-    public String updateCommunities(@RequestParam List<Long> communityIds, Authentication authentication) {
+    public String updateCommunities(@RequestParam(required = false) List<Long> communityIds,
+                                    Authentication authentication) {
         String email = authentication.getName();
         Person user = personService.findByEmail(email);
-        Set<Community> selected = new HashSet<>(communityRepository.findAllById(communityIds));
+
+        Set<Community> selected = (communityIds != null)
+                ? new HashSet<>(communityRepository.findAllById(communityIds))
+                : new HashSet<>();
         user.setCommunities(selected);
         personService.save(user);
         return "redirect:/profile";
