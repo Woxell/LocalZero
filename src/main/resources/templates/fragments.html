@@ -24,6 +24,9 @@
             <h1 th:text="'Hello,' + ${user.name} + '!'">Hello, User!</h1>
             <p><strong>Email</strong> <span th:text="${user.email}">mail@example.com</span></p>
 
+            <!-- ✅ Visa total CO2-besparing -->
+            <p><strong>Total CO₂ saved:</strong> <span th:text="${totalCarbonSavings}">0.0</span> kg</p>
+
             <form th:action="@{/profile/communities}" method="post">
                 <label>Your Communities:</label><br>
                 <div th:each="c : ${allCommunities}">
@@ -60,15 +63,21 @@
             <span th:unless="${post != null and post.author != null}">Unknown user</span>
 
             <div class="post-ball">
-            <span th:if="${post.initiative != null}" th:text="' #' + ${post.initiative.title}"></span>
+                <span th:if="${post.initiative != null}" th:text="' #' + ${post.initiative.title}"></span>
             </div>
         </div>
 
         <div class="feed-post-content" th:text="${post.content}">Post Content</div>
 
+        <!-- ✅ EcoAction-visning -->
+        <div th:if="${post.ecoAction != null}" style="margin-top: 0.5rem; font-style: italic; color: darkgreen;">
+            🌱 Eco Action: <span th:text="${post.ecoAction.content}">Eco Content</span>
+            — <span th:text="${post.ecoAction.carbonSavings}">0</span> kg CO₂ saved
+        </div>
+
         <div class="feed-actions">
             <form th:action="@{/posts/{id}/like(id=${post.id})}" method="post" style="display:inline;">
-                <input type ="hidden" name="source" th:value="${source}"/>
+                <input type="hidden" name="source" th:value="${source}"/>
                 <button type="submit" class="like-button">❤️</button>
                 <span th:text="${post.likesCount}">0</span>
             </form>
@@ -101,6 +110,8 @@
         <button onclick="sendMessage()" data-receiver-email="">Send</button>
     </div>
 </div>
+
+<a href="/eco-actions">Eco Actions</a>
 
 </body>
 </html>

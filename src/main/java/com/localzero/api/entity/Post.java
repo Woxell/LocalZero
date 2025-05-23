@@ -48,5 +48,8 @@ public class Post implements TimeStampEntry{
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PostComment> comments = new ArrayList<>();
 
-    
+    @OneToOne
+    @JoinColumn(name = "eco_action_id")
+    private EcoAction ecoAction;
+
 }

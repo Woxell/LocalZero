@@ -11,4 +11,6 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     List<Post> findByInitiativeIsNullOrderByCreationDatetimeDesc();
 
     List<Post> findByInitiativeIdOrderByCreationDatetimeDesc(Long initiativeId);
+
+
 }
