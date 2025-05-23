@@ -13,14 +13,28 @@
     font-family: 'Segoe UI', sans-serif;
 }
 
+.app-content {
+    height: calc(100vh - 60px); /* Below navbar */
+    overflow-y: auto; /* Only content scrolls */
+}
+
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', sans-serif;
+    overflow: hidden; /* Prevent page scroll */
+}
+
 body {
-    min-height: 100vh;
-    padding-top: 70px;
     background-image: url("https://www.psdstack.com/wp-content/uploads/2019/08/copyright-free-images-750x420.jpg");
     background-repeat: no-repeat;
     background-position: center;
     background-size: cover;
-    font-family: 'Segoe UI', sans-serif;
+    background-attachment: fixed; /* Fix background */
+    min-height: 100vh;
+    padding-top: 53px;
 }
 
 .navbar {
@@ -30,8 +44,8 @@ body {
     width: 100%;
     z-index: 1000;
     display: flex;
-    flex-wrap: wrap; /* Möjliggör radbrytning */
-    justify-content: center; /* Centrera innehåll i flera rader */
+    flex-wrap: wrap; /* MÃ¶jliggÃ¶r radbrytning */
+    justify-content: center; /* Centrera innehÃ¥ll i flera rader */
     gap: 1rem;
     background-color: #2c3e50;
     padding: 1rem 2rem;
@@ -118,7 +132,9 @@ body {
     padding: 0;
 }
 
-.like-button:hover {
+
+.like-button:hover{
+
     tansform: scale(1.1);
 }
 

@@ -18,10 +18,10 @@
                 <div class="initiative-details">
                     <h2 th:text="${initiative.title}">Initiative Title</h2>
                     <p th:text="${initiative.description}">Description</p>
-                    <p><strong>Location:</strong> <span th:text="${initiative.location}">Location</span></p>
-                    <p><strong>Category:</strong> <span th:text="${initiative.category}">Category</span></p>
+                    <p><strong>Plats:</strong> <span th:text="${initiative.location}">Location</span></p>
+                    <p><strong>Kategori:</strong> <span th:text="${initiative.category}">Category</span></p>
                     <p><strong>Start:</strong> <span th:text="${#temporals.format(initiative.startDate, 'yyyy-MM-dd HH:mm')}"></span></p>
-                    <p><strong>End:</strong> <span th:text="${#temporals.format(initiative.endDate, 'yyyy-MM-dd HH:mm')}"></span></p>
+                    <p><strong>Slut:</strong> <span th:text="${#temporals.format(initiative.endDate, 'yyyy-MM-dd HH:mm')}"></span></p>
 
                     <div th:if="${isParticipant}">
                         <p style="color: green;">You're in this initiative</p>
@@ -47,7 +47,6 @@
                 </div>
             </div>
 
-
             <div class="initiative-posts" style="margin-top: 2rem;">
                 <h3>Posts</h3>
                 <div th:if="${posts.isEmpty()}">
@@ -57,6 +56,13 @@
                     <div style="border-top: 1px solid currentColor; padding-top: 1rem;">
                         <p><strong th:text="${post.author.name}">Author</strong></p>
                         <p th:text="${post.content}">Post content</p>
+
+                        <!-- 🌱 EcoAction-visning -->
+                        <div th:if="${post.ecoAction != null}" style="font-style: italic; color: darkgreen;">
+                            🌱 Eco Action: <span th:text="${post.ecoAction.content}">Eco Content</span>
+                            — <span th:text="${post.ecoAction.carbonSavings}">0</span> kg CO₂ saved
+                        </div>
+
                         <p style="font-size: 0.9rem; font-weight: bold;" th:text="${#temporals.format(post.creationDatetime, 'yyyy-MM-dd HH:mm')}"></p>
                     </div>
                 </div>
@@ -72,6 +78,18 @@
                 <input type="hidden" name="initiativeId" th:value="${initiative.id}" />
                 <textarea name="content" placeholder="Write your update..." rows="6" required
                           style="width: 100%; margin-bottom: 1rem;"></textarea>
+
+                <!-- Optional: Eco Action logging -->
+                <label for="ecoContent">Eco Action (optional):</label>
+                <select name="ecoContent" id="ecoContent" style="width: 100%; margin: 1rem 0;">
+                    <option value="">-- None --</option>
+                    <option value="Biked to work">Biked to work</option>
+                    <option value="Used reusable bags">Used reusable bags</option>
+                    <option value="Composted food waste">Composted food waste</option>
+                    <option value="Recycled electronics">Recycled electronics</option>
+                    <option value="Took public transport">Took public transport</option>
+                </select>
+
                 <button type="submit">Post</button>
             </form>
         </div>

@@ -19,6 +19,8 @@ import org.springframework.security.core.Authentication;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.List;
 
 @Controller
@@ -53,11 +55,32 @@ public class MessageController {
         for (Person p : persons)
             System.out.println("Person: " + p);
 
+        Set<String> chatPartners = new HashSet<>();
+        for (DirectMessage m : messages) {
+            if (!m.getSenderEmail().equals(loggedInUserEmail)) chatPartners.add(m.getSenderEmail());
+            if (!m.getReceiverEmail().equals(loggedInUserEmail)) chatPartners.add(m.getReceiverEmail());
+        }
+        model.addAttribute("chatPartners", getChatPartners(authentication));
         model.addAttribute("messages", messages); // Add messages to the model
         model.addAttribute("persons", persons);
         model.addAttribute("user", personService.findByEmail(loggedInUserEmail));
 
         return "messages"; // Resolves messages.html
+    }
+
+    @GetMapping("/chatpartners")
+    @ResponseBody
+    public Set<String> getChatPartners(Authentication authentication) {
+        String loggedInUserEmail = authentication.getName();
+        List<DirectMessage> messages = new ArrayList<>();
+        messages.addAll(directMessageRepository.findByReceiverEmail(loggedInUserEmail));
+        messages.addAll(directMessageRepository.findBySenderEmail(loggedInUserEmail));
+        Set<String> chatPartners = new HashSet<>();
+        for (DirectMessage m : messages) {
+            if (!m.getSenderEmail().equals(loggedInUserEmail)) chatPartners.add(m.getSenderEmail());
+            if (!m.getReceiverEmail().equals(loggedInUserEmail)) chatPartners.add(m.getReceiverEmail());
+        }
+        return chatPartners;
     }
 
     @PostMapping

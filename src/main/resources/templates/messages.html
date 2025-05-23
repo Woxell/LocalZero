@@ -14,14 +14,18 @@
 <div class="messages-layout">
     <div class="dm-container">
         <div id="clientInfo">
-            <strong th:text="${user.name}">User Name placeholder</strong>
+            <strong th:text="${user.name}">User Name placeholder </strong>
             (<span th:text="${user.email}">user@example.com placeholder</span>)
             <input type="hidden" id="clientEmail" th:value="${user.email}" />
         </div>
-        <h1>Direct Messages</h1>
         <button class="new-chat-btn" onclick="openNewChatDialog()">New Chat</button>
         <div class="dm-list">
-            <!-- existing dm-list content -->
+            <!--<div th:if="${chatPartners != null}">
+                <div th:each="email : ${chatPartners}"
+                     class="dm-list-item"
+                     th:attr="onclick='startChat(\'' + ${email} + '\')'"
+                     th:text="${email}"></div>
+            </div> -->
         </div>
     </div>
 
