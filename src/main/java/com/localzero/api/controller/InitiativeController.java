@@ -240,19 +240,19 @@ public class InitiativeController {
         Initiative initiative = initiativeRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
-        // Endast skaparen (som är ADMIN) kan ändra roller
+        // Endast admin kan ändra roller
         if (!initiative.getCreator().getEmail().equals(current.getEmail())) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Endast skaparen kan ändra roller.");
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Only admins can update roles.");
         }
 
-        // Skaparen kan inte ändra sin egen roll
+        // creator kan inte ändra sin egen roll
         if (initiative.getCreator().getEmail().equals(targetEmail)) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Skaparen kan inte ändra sin egen roll.");
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "creator cannot change his/her role.");
         }
 
-        // Ingen kan få ADMIN rollen förutom skaparen
+        // Ingen kan få ADMIN rollen förutom creator
         if ("ADMIN".equals(newRole)) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Endast skaparen kan ha ADMIN-rollen.");
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Only creator can have admin role.");
         }
 
         InitiativeParticipant target = initiativeParticipantRepository
@@ -264,7 +264,7 @@ public class InitiativeController {
             target.setRole(parsedRole);
             initiativeParticipantRepository.save(target);
         } catch (IllegalArgumentException e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Ogiltig roll");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Illegal role!");
         }
 
         return "redirect:/initiatives/" + id;

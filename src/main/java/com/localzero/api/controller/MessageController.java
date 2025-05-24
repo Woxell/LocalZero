@@ -65,7 +65,7 @@ public class MessageController {
         model.addAttribute("persons", persons);
         model.addAttribute("user", personService.findByEmail(loggedInUserEmail));
 
-        return "messages"; // Resolves messages.html
+        return "messages";
     }
 
     @GetMapping("/chatpartners")
