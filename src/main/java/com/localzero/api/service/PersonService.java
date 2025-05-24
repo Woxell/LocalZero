@@ -17,13 +17,12 @@ import java.util.List;
 @AllArgsConstructor
 public class PersonService implements UserDetailsService {
 
-    @Autowired
     private final PersonRepository personRepository;
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         System.out.println("Loading user by email: " + email);
-        Optional<Person> person = personRepository.findByEmail(email);
+        Optional<Person> person = findOptionalByEmail(email);
         if (person.isPresent()) {
             var personObj = person.get();
             return User.builder().
@@ -36,7 +35,8 @@ public class PersonService implements UserDetailsService {
     }
 
     public Person findByEmail(String email) {
-        return personRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("User not found"));
+        return personRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + email));
     }
 
     public List<Person> findAll() {
@@ -47,7 +47,7 @@ public class PersonService implements UserDetailsService {
         return personRepository.findById(email);
     }
 
-    public void save(Person person) {
-        personRepository.save(person);
+    public Person save(Person person) {
+        return personRepository.save(person);
     }
 }

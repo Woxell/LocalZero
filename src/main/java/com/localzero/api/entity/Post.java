@@ -1,8 +1,5 @@
 package com.localzero.api.entity;
 
-
-
-
 /**
  * @author Emil
  * @author Mahyar
@@ -15,7 +12,6 @@ import com.localzero.api.template.TimeStampEntry;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-
 
 @Entity
 @Data

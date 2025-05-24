@@ -2,20 +2,18 @@ package com.localzero.api.service;
 
 import com.localzero.api.entity.EcoAction;
 import com.localzero.api.repository.EcoActionRepository;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@AllArgsConstructor
 public class EcoActionService {
 
-    private final EcoActionRepository ecoRepo;
+    private EcoActionRepository ecoRepo;
 
-    public EcoActionService(EcoActionRepository ecoRepo) {
-        this.ecoRepo = ecoRepo;
-    }
-
-    public List<EcoAction> getAllByUser(String email) {
+    public List<EcoAction> getAllEcoactionsBy(String email) {
         return ecoRepo.findByAuthorEmail(email);
     }
 
