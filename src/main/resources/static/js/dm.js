@@ -1,4 +1,4 @@
-const baseURL = 'http://localhost:8080';
+const baseURL = 'https://localzero.fly.dev';
 
 function openNewChatDialog() {
     document.getElementById('dialogBackdrop').style.display = 'block';
