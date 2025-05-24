@@ -1,12 +1,8 @@
 {
-    margin: 0
-;
-    padding: 0
-;
-    box-sizing: border-box
-;
-    font-family: 'Segoe UI', sans-serif
-;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', sans-serif;
 }
 
 * {
@@ -32,7 +28,7 @@ body {
     background-repeat: no-repeat;
     background-position: center;
     background-size: cover;
-    background-attachment: fixed; /* Fix background */
+    background-attachment: fixed;
     min-height: 100vh;
     padding-top: 53px;
 }
@@ -83,8 +79,8 @@ body {
 
 .messages-layout {
     display: flex;
-    height: calc(100vh - 60px); /* Full height minus navbar */
-    overflow: hidden; /* Prevent layout scrolling */
+    height: calc(100vh - 60px);
+    overflow: hidden;
 }
 
 .dm-container {
@@ -102,7 +98,7 @@ body {
     background: rgba(255, 255, 255, 0.9);
 }
 
-/* Custom scrollbar styling */
+
 .dm-container::-webkit-scrollbar,
 .chat-container::-webkit-scrollbar {
     width: 8px;
