@@ -1,5 +1,6 @@
 package com.localzero.api.controller;
 
+import com.localzero.api.entity.Community;
 import com.localzero.api.entity.EcoAction;
 import com.localzero.api.entity.Person;
 import com.localzero.api.entity.Post;
@@ -8,18 +9,28 @@ import com.localzero.api.entity.Community;
 import com.localzero.api.service.PostService;
 import com.localzero.api.service.EcoActionService;
 import com.localzero.api.service.PersonService;
+
+import org.springframework.security.core.Authentication;
+
 import lombok.AllArgsConstructor;
+
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
+
+
+
+
 import org.springframework.web.bind.annotation.*;
 
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+
 import java.util.Set;
 
 @Controller
@@ -32,6 +43,7 @@ public class ProfileController {
     private final PostService postService;
 
     @GetMapping("/profile")
+    @Transactional(readOnly = true)
     public String getProfile(Model model, @AuthenticationPrincipal UserDetails currentUser) {
         if (currentUser == null) {
             return "redirect:/login";
@@ -40,10 +52,11 @@ public class ProfileController {
         String email = currentUser.getUsername();
         Person user = personService.findByEmail(email);
 
-        // Hämta användarens poster via repository
-        List<Post> posts = postService.getPostsByAuthorEmail(email);
 
-        // Eco actions och total CO₂
+        List<Post> posts = postRepository.findByAuthorEmailOrderByCreationDatetimeDesc(email);
+
+
+
         List<EcoAction> actions = ecoActionService.getAllByUser(email);
         float totalCarbon = actions.stream()
                 .map(EcoAction::getCarbonSavings)
@@ -87,4 +100,5 @@ public class ProfileController {
         model.addAttribute("source", "profile");
         return "profile";
     }
+
 }

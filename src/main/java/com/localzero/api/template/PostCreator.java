@@ -24,7 +24,7 @@ public class PostCreator {
         this.initiativeRepository = initiativeRepository;
     }
 
-    public Post create(String email, String content, Long initiativeId, EcoAction ecoAction) {
+    public Post create(String email, String content, Long initiativeId, EcoAction ecoAction, byte[] imageData) {
         Person person = personRepository.findByEmail(email).orElseThrow(() ->
                 new IllegalArgumentException("User not found with email: " + email));
 
@@ -40,6 +40,9 @@ public class PostCreator {
 
         if (ecoAction != null) {
             post.setEcoAction(ecoAction);
+        }
+        if (imageData != null && imageData.length > 0) {
+            post.setImage(imageData);
         }
 
         return postRepository.save(post);

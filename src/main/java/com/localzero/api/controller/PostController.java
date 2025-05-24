@@ -9,11 +9,16 @@ import com.localzero.api.service.InitiativeService;
 import com.localzero.api.service.PersonService;
 import com.localzero.api.service.PostService;
 import com.localzero.api.template.PostCreator;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @Controller
 public class PostController {
@@ -48,7 +53,8 @@ public class PostController {
     public String createPost(@RequestParam String content,
                              @RequestParam(required = false) Long initiativeId,
                              @RequestParam(required = false) String ecoContent,
-                             @AuthenticationPrincipal UserDetails currentUser) {
+                             @RequestParam(required = false) MultipartFile image,
+                             @AuthenticationPrincipal UserDetails currentUser) throws IOException {
         if (currentUser == null) {
             return "redirect:/login";
         }
@@ -64,20 +70,40 @@ public class PostController {
                 ecoAction.setAuthorEmail(person.getEmail());
                 ecoAction.setContent(type.getLabel());
                 ecoAction.setCarbonSavings(type.getCarbonSavings());
-                ecoAction.setCommunityId(
-                        person.getCommunities().stream().findFirst().map(c -> c.getId()).orElse(null)
-                );
+
+                Long communityId = person.getCommunities().stream()
+                        .findFirst()
+                        .map(c -> c.getId())
+                        .orElse(1L);
+
+                ecoAction.setCommunityId(communityId);
                 ecoActionService.save(ecoAction);
             }
         }
+        byte[] imageData = null;
+        if (image != null && !image.isEmpty()) {
+            imageData = image.getBytes();
+        }
 
-        Post post = pCreator.create(currentUser.getUsername(), content, initiativeId, ecoAction);
+        Post post = pCreator.create(currentUser.getUsername(), content, initiativeId, ecoAction, imageData);
 
         if (initiativeId != null) {
             return "redirect:/initiatives/" + initiativeId;
         }
 
         return "redirect:/feed";
+    }
+
+    @GetMapping("/posts/image/{id}")
+    @ResponseBody
+    public ResponseEntity<byte[]> getPostImage(@PathVariable long id) {
+        Post post = postService.getById(id);
+        if (post.getImage() != null) {
+            return ResponseEntity.ok()
+                    .contentType(MediaType.IMAGE_JPEG)
+                    .body(post.getImage());
+        }
+        return ResponseEntity.notFound().build();
     }
 
     @PostMapping("/posts/{id}/like")
