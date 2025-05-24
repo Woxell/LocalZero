@@ -9,6 +9,10 @@
 
 <div th:replace="~{fragments :: navbar}"></div>
 
+<div th:if="${errorMessage}" style="color:red; font-weight: bold; margin: 1rem;">
+    <p th:text="${errorMessage}">Something went wrong 💀</p>
+</div>
+
 <div class="feed-wrapper-container">
 
     <div class="feed-wrapper" style="flex: 2;">
@@ -17,6 +21,9 @@
             <div class="initiative-info-row">
                 <div class="initiative-details">
                     <h2 th:text="${initiative.title}">Initiative Title</h2>
+                    <div th:if="${error}" style="color: red; margin-bottom: 1rem;">
+                        <p th:text="${error}"></p>
+                    </div>
                     <p th:text="${initiative.description}">Description</p>
                     <p><strong>Plats:</strong> <span th:text="${initiative.location}">Location</span></p>
                     <p><strong>Kategori:</strong> <span th:text="${initiative.category}">Category</span></p>
@@ -28,6 +35,9 @@
                         <form th:action="@{'/initiatives/' + ${initiative.id} + '/leave'}" method="post">
                             <button type="submit" style="color: red;">Leave Initiative</button>
                         </form>
+                        <div th:if="${isCreator}" style="color: gray;">
+                            <em>You cannot leave this initiative since you're the creator.</em>
+                        </div>
                     </div>
 
                     <form th:if="${!isParticipant}" th:action="@{'/initiatives/' + ${initiative.id} + '/join'}" method="post">
@@ -39,9 +49,24 @@
                 <div class="initiative-participants">
                     <h3>Participants (<span th:text="${#lists.size(initiative.participants)}">0</span>)</h3>
                     <ul>
-                        <li th:each="p : ${initiative.participants}" class="participant-card">
-                            <span th:text="${p.name}">Participant Name</span><br/>
-                            <small>Role: Participant</small>
+                        <li th:each="participant : ${participantsWithRoles}" class="participant-card">
+                            <span th:text="${participant.person.name}">Participant Name</span>
+                            <span th:if="${participant.person.email == initiative.creator.email}" style="color: gold;">(Skapare)</span><br/>
+                            <small>Roll: <span th:text="${participant.role}">Unknown</span></small>
+
+                            <!-- Endast skaparen kan ändra roller, och inte sin egen -->
+                            <form th:if="${isCreator} and ${participant.person.email != initiative.creator.email}"
+                                  th:action="@{'/initiatives/' + ${initiative.id} + '/roles'}"
+                                  method="post" style="margin-top: 5px;">
+                                <input type="hidden" name="targetEmail" th:value="${participant.person.email}" />
+                                <select name="newRole">
+                                    <option value="MEMBER" th:selected="${participant.role.name() == 'MEMBER'}">MEMBER</option>
+                                    <option value="RESIDENT" th:selected="${participant.role.name() == 'RESIDENT'}">RESIDENT</option>
+                                    <option value="ORGANIZER" th:selected="${participant.role.name() == 'ORGANIZER'}">ORGANIZER</option>
+                                    <!-- ADMIN-rollen är inte tillgänglig för andra än skaparen -->
+                                </select>
+                                <button type="submit" style="font-size: 12px;">Ändra roll</button>
+                            </form>
                         </li>
                     </ul>
                 </div>
@@ -68,6 +93,7 @@
                 </div>
             </div>
 
+            </div>
         </div>
     </div>
 
