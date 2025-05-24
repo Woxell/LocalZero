@@ -2,6 +2,7 @@ package com.localzero.api.service;
 
 import com.localzero.api.entity.Post;
 import com.localzero.api.repository.PostRepository;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -9,13 +10,10 @@ import java.util.List;
 
 @Service
 @Transactional
+@AllArgsConstructor
 public class PostService {
 
     private final PostRepository postRepository;
-
-    public PostService(PostRepository postRepository) {
-        this.postRepository = postRepository;
-    }
 
     @Transactional(readOnly = true)
     public List<Post> getPostsByAuthorEmail(String email) {
@@ -41,7 +39,6 @@ public class PostService {
         post.setLikesCount(post.getLikesCount() + 1);
         postRepository.save(post);
     }
-
 
     @Transactional(readOnly = true)
     public Post getById(long postId) {

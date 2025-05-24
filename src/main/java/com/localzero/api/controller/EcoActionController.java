@@ -28,7 +28,7 @@ public class EcoActionController {
     @GetMapping
     public String showActions(Model model, @AuthenticationPrincipal UserDetails currentUser) {
         String email = currentUser.getUsername();
-        List<EcoAction> actions = ecoActionService.getAllByUser(email);
+        List<EcoAction> actions = ecoActionService.getAllEcoactionsBy(email);
         model.addAttribute("actions", actions);
         return "eco-actions";
     }

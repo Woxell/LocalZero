@@ -1,13 +1,12 @@
 package com.localzero.api.controller;
 
 import com.localzero.api.entity.EcoAction;
-import com.localzero.api.entity.Notification;
 import com.localzero.api.entity.Person;
 import com.localzero.api.enumeration.EcoActionType;
 import com.localzero.api.entity.Post;
-import com.localzero.api.repository.NotificationsRepository;
 import com.localzero.api.service.*;
 import com.localzero.api.template.PostCreator;
+import lombok.AllArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -20,36 +19,22 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 
 @Controller
+@AllArgsConstructor
 public class PostController {
 
-    private final PostService postService;
-    private final PostCreator pCreator;
-    private final InitiativeService inservice;
     private final EcoActionService ecoActionService;
-    private final PersonService personService;
-    private final NotificationsRepository notificationsRepository;
+    private final InitiativeService initiativeService;
     private final NotificationService notificationService;
-
-    public PostController(PostService postService, PostCreator pCreator,
-                          InitiativeService inservice, EcoActionService ecoActionService,
-                          PersonService personService, NotificationsRepository notificationsRepository,
-                          NotificationService notificationService) {
-        this.postService = postService;
-        this.pCreator = pCreator;
-        this.inservice = inservice;
-        this.ecoActionService = ecoActionService;
-        this.personService = personService;
-        this.notificationsRepository = notificationsRepository;
-        this.notificationService = notificationService;
-    }
-
+    private final PersonService personService;
+    private final PostCreator postCreator;
+    private final PostService postService;
 
     @GetMapping("/create-post")
     public String ShowCreatedPostForm(Model model, @AuthenticationPrincipal UserDetails currentUser) {
         if (currentUser != null) {
-            model.addAttribute("initiatives", inservice.getByParticipant(currentUser.getUsername()));
+            model.addAttribute("initiatives", initiativeService.getByParticipant(currentUser.getUsername()));
         } else {
-            model.addAttribute("initiatives", inservice.getAll());
+            model.addAttribute("initiatives", initiativeService.getAll());
         }
         return "create-post";
     }
@@ -90,7 +75,7 @@ public class PostController {
             imageData = image.getBytes();
         }
 
-        Post post = pCreator.create(currentUser.getUsername(), content, initiativeId, ecoAction, imageData);
+        Post post = postCreator.create(currentUser.getUsername(), content, initiativeId, ecoAction, imageData);
 
         if (initiativeId != null) {
             return "redirect:/initiatives/" + initiativeId;

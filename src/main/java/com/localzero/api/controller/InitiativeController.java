@@ -1,13 +1,11 @@
 package com.localzero.api.controller;
 
 import com.localzero.api.entity.*;
+import com.localzero.api.service.*;
 import com.localzero.api.enumeration.InitiativeCategory;
 import com.localzero.api.enumeration.UserRole;
-import com.localzero.api.repository.*;
-import com.localzero.api.service.InitiativeService;
-import com.localzero.api.service.NotificationService;
 import com.localzero.api.template.InitiativeCreator;
-import lombok.RequiredArgsConstructor;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -22,18 +20,16 @@ import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/initiatives")
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class InitiativeController {
 
-    private final InitiativeCreator ic;
-    private final InitiativeRepository initiativeRepository;
-    private final PersonRepository personRepository;
-    private final CommunityRepository communityRepository;
-    private final InitiativeService initiativeService;
-    private final PostRepository postRepository;
-    private final InitiativeParticipantRepository initiativeParticipantRepository;
-    private final NotificationService notificationService;
-
+    private InitiativeCreator initiativeCreator;
+    private InitiativeService initiativeService;
+    private PersonService personService;
+    private CommunityService communityService;
+    private PostService postService;
+    private InitiativeParticipantService InitiativeParticipantService;
+    private NotificationService notificationService;
 
     @PostMapping("/create")
     public String createInitiative(@RequestParam String title,
@@ -55,33 +51,32 @@ public class InitiativeController {
         initiative.setCategory(category);
         initiative.setPublic(isPublic);
 
-        Person creator = personRepository.findByEmail(user.getUsername()).orElseThrow();
+        Person creator = personService.findByEmail(user.getUsername());
         initiative.setCreator(creator);
         initiative.setCommunityMember(creator);
 
         Set<Community> selectedCommunities = (communityIds != null)
-                ? new HashSet<>(communityRepository.findAllById(communityIds))
+                ? new HashSet<>(communityService.findAllById(communityIds))
                 : new HashSet<>();
         initiative.setCommunities(selectedCommunities);
 
-        ic.create(user.getUsername(), initiative);
+        initiativeCreator.create(user.getUsername(), initiative);
 
-        // Skkaparen får Admin roll
+        // Skaparen får Admin roll
         InitiativeParticipant admin = new InitiativeParticipant();
         admin.setInitiative(initiative);
         admin.setPerson(creator);
         admin.setRole(UserRole.ADMIN);
         admin.setJoinedAt(LocalDateTime.now());
 
-        initiativeParticipantRepository.save(admin);
+        InitiativeParticipantService.save(admin);
 
         for (Community membership : selectedCommunities) {
             String memberEmail = membership.getMemberEmail();
 
             if (!memberEmail.equals(creator.getEmail())) {
-                personRepository.findByEmail(memberEmail).ifPresent(member ->
-                        notificationService.notify(
-                                member,
+                personService.findOptionalByEmail(memberEmail).ifPresent(member ->
+                        notificationService.notify(member,
                                 "A new initiative \"" + title + "\" was created in your community."
                         )
                 );
@@ -93,7 +88,7 @@ public class InitiativeController {
 
     @GetMapping("/feed")
     public String showInitiatives(Model model, @AuthenticationPrincipal UserDetails currentUser) {
-        Person person = personRepository.findByEmail(currentUser.getUsername()).orElseThrow();
+        Person person = personService.findByEmail(currentUser.getUsername());
         List<Initiative> initiatives = initiativeService.getVisibleForUser(person);
         initiatives = initiatives.stream().filter(Objects::nonNull).toList();
         List<Initiative> myInitiatives = initiativeService.getByParticipant(person.getEmail());
@@ -109,7 +104,7 @@ public class InitiativeController {
     @GetMapping("/new")
     public String showCreateInitiativeForm(Model model) {
         model.addAttribute("categories", InitiativeCategory.values());
-        model.addAttribute("allCommunities", communityRepository.findAll());
+        model.addAttribute("allCommunities", communityService.findAll());
         return "create-initiative";
     }
 
@@ -117,11 +112,9 @@ public class InitiativeController {
     public String showEditInitiativeForm(@PathVariable Long id, Model model,
                                          @AuthenticationPrincipal UserDetails currentUser) {
         Initiative initiative = initiativeService.getById(id);
-        Person person = personRepository.findByEmail(currentUser.getUsername()).orElseThrow();
+        Person person = personService.findByEmail(currentUser.getUsername());
 
-        boolean isParticipant = initiativeParticipantRepository
-                .findByInitiativeIdAndPersonEmail(id, person.getEmail())
-                .isPresent();
+        boolean isParticipant = InitiativeParticipantService.isParticipantInInitiative(id, person.getEmail());
 
         model.addAttribute("initiative", initiative);
         model.addAttribute("isParticipant", isParticipant);
@@ -129,7 +122,7 @@ public class InitiativeController {
         model.addAttribute("currentUserEmail", currentUser.getUsername());
 
         List<InitiativeParticipant> participantsWithRoles =
-                initiativeParticipantRepository.findByInitiativeId(initiative.getId());
+                InitiativeParticipantService.findByInitiativeId(initiative.getId());
 
         String myRole = participantsWithRoles.stream()
                 .filter(p -> p.getPerson().getEmail().equals(person.getEmail()))
@@ -140,7 +133,7 @@ public class InitiativeController {
         model.addAttribute("myRole", myRole);
         model.addAttribute("isCreator", initiative.getCreator().getEmail().equals(person.getEmail()));
 
-        List<Post> posts = postRepository.findByInitiativeIdOrderByCreationDatetimeDesc(initiative.getId());
+        List<Post> posts = postService.getPostsByInitiativeId(initiative.getId());
         model.addAttribute("posts", posts);
 
         return "initiative-view";
@@ -148,14 +141,13 @@ public class InitiativeController {
 
     @PostMapping("/{id}/join")
     public String joinInitiative(@PathVariable Long id, @AuthenticationPrincipal UserDetails currentUser) {
-        Initiative initiative = initiativeRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        Initiative initiative = initiativeService.findById(id);
 
-        Person person = personRepository.findByEmail(currentUser.getUsername()).orElseThrow();
+        Person person = personService.findByEmail(currentUser.getUsername());
 
         // Kontrollera om personen redan är deltagare
         Optional<InitiativeParticipant> existingParticipant =
-                initiativeParticipantRepository.findByInitiativeIdAndPersonEmail(id, person.getEmail());
+                InitiativeParticipantService.optionalFindByInitiativeIdAndPersonEmail(id, person.getEmail());
 
         if (existingParticipant.isEmpty()) {
             InitiativeParticipant newParticipant = new InitiativeParticipant();
@@ -164,7 +156,7 @@ public class InitiativeController {
             newParticipant.setRole(UserRole.MEMBER);
             newParticipant.setJoinedAt(LocalDateTime.now());
 
-            initiativeParticipantRepository.save(newParticipant);
+            InitiativeParticipantService.save(newParticipant);
 
             try {
                 initiativeService.addParticipant(id, currentUser.getUsername());
@@ -182,24 +174,21 @@ public class InitiativeController {
                                   Model model) {
         String email = currentUser.getUsername();
 
-        Initiative initiative = initiativeRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        Initiative initiative = initiativeService.findById(id);
 
-        InitiativeParticipant me = initiativeParticipantRepository
-                .findByInitiativeIdAndPersonEmail(id, email)
-                .orElse(null);
+        InitiativeParticipant initiativeParticipant = InitiativeParticipantService.findByInitiativeIdAndPersonEmail(id, email);
 
         // Admin kan inte lämna
-        if (me == null || initiative.getCreator().getEmail().equals(email)) {
-            String errorMessage = (me == null)
+        if (initiativeParticipant == null || initiative.getCreator().getEmail().equals(email)) {
+            String errorMessage = (initiativeParticipant == null)
                     ? "You are not a member of this initiative"
                     : "The creator cannot leave their own initiative.";
 
-            Person person = personRepository.findByEmail(email).orElseThrow();
-            boolean isParticipant = (me != null);
+            Person person = personService.findByEmail(email);
+            boolean isParticipant = (initiativeParticipant != null);
 
             List<InitiativeParticipant> participantsWithRoles =
-                    initiativeParticipantRepository.findByInitiativeId(initiative.getId());
+                    InitiativeParticipantService.findByInitiativeId(initiative.getId());
 
             String myRole = participantsWithRoles.stream()
                     .filter(p -> p.getPerson().getEmail().equals(person.getEmail()))
@@ -207,7 +196,7 @@ public class InitiativeController {
                     .findFirst()
                     .orElse("UNKNOWN");
 
-            List<Post> posts = postRepository.findByInitiativeIdOrderByCreationDatetimeDesc(initiative.getId());
+            List<Post> posts = postService.getPostsByInitiativeId(initiative.getId());
 
             model.addAttribute("initiative", initiative);
             model.addAttribute("errorMessage", errorMessage);
@@ -221,11 +210,11 @@ public class InitiativeController {
             return "initiative-view";
         }
 
-        initiativeParticipantRepository.delete(me);
+        InitiativeParticipantService.delete(initiativeParticipant);
 
         // Ta även bort från Initiative.participants
         initiative.getParticipants().removeIf(p -> p.getEmail().equals(email));
-        initiativeRepository.save(initiative);
+        initiativeService.save(initiative);
 
         return "redirect:/feed";
     }
@@ -235,10 +224,9 @@ public class InitiativeController {
                              @RequestParam String targetEmail,
                              @RequestParam String newRole,
                              @AuthenticationPrincipal UserDetails currentUser) {
-        Person current = personRepository.findByEmail(currentUser.getUsername()).orElseThrow();
+        Person current = personService.findByEmail(currentUser.getUsername());
 
-        Initiative initiative = initiativeRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        Initiative initiative = initiativeService.findById(id);
 
         // Endast admin kan ändra roller
         if (!initiative.getCreator().getEmail().equals(current.getEmail())) {
@@ -255,14 +243,12 @@ public class InitiativeController {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Only creator can have admin role.");
         }
 
-        InitiativeParticipant target = initiativeParticipantRepository
-                .findByInitiativeIdAndPersonEmail(id, targetEmail)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Deltagaren hittades inte."));
+        InitiativeParticipant target = InitiativeParticipantService.findByInitiativeIdAndPersonEmail(id, targetEmail);
 
         try {
             UserRole parsedRole = UserRole.valueOf(newRole);
             target.setRole(parsedRole);
-            initiativeParticipantRepository.save(target);
+            InitiativeParticipantService.save(target);
         } catch (IllegalArgumentException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Illegal role!");
         }
