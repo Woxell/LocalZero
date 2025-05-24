@@ -42,9 +42,11 @@ public class PostService {
         postRepository.save(post);
     }
 
+
     @Transactional(readOnly = true)
     public Post getById(long postId) {
         return postRepository.findById(postId).orElseThrow(() ->
                 new RuntimeException("Post not found with id: " + postId));
     }
+
 }

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Your Notifications</title>
+    <link rel="stylesheet" href="/css/main.css">
+</head>
+<body>
+<div th:replace="~{fragments :: navbar}"></div>
+
+<div class="feed-wrapper">
+    <h2>Your Notifications</h2>
+
+    <div th:if="${notifications.isEmpty()}">
+        <p>No new notifications</p>
+    </div>
+
+    <ul>
+        <li th:each="n : ${notifications}" style="margin-bottom: 1rem;">
+            <strong th:text="${n.description}">Notification text</strong><br>
+            <small th:text="${#temporals.format(n.creationDatetime, 'yyyy-MM-dd HH:mm')}"></small>
+        </li>
+    </ul>
+</div>
+
+</body>
+</html>

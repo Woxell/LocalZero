@@ -1,13 +1,12 @@
 package com.localzero.api.controller;
 
 import com.localzero.api.entity.EcoAction;
+import com.localzero.api.entity.Notification;
 import com.localzero.api.entity.Person;
 import com.localzero.api.enumeration.EcoActionType;
 import com.localzero.api.entity.Post;
-import com.localzero.api.service.EcoActionService;
-import com.localzero.api.service.InitiativeService;
-import com.localzero.api.service.PersonService;
-import com.localzero.api.service.PostService;
+import com.localzero.api.repository.NotificationsRepository;
+import com.localzero.api.service.*;
 import com.localzero.api.template.PostCreator;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -28,16 +27,22 @@ public class PostController {
     private final InitiativeService inservice;
     private final EcoActionService ecoActionService;
     private final PersonService personService;
+    private final NotificationsRepository notificationsRepository;
+    private final NotificationService notificationService;
 
     public PostController(PostService postService, PostCreator pCreator,
                           InitiativeService inservice, EcoActionService ecoActionService,
-                          PersonService personService) {
+                          PersonService personService, NotificationsRepository notificationsRepository,
+                          NotificationService notificationService) {
         this.postService = postService;
         this.pCreator = pCreator;
         this.inservice = inservice;
         this.ecoActionService = ecoActionService;
         this.personService = personService;
+        this.notificationsRepository = notificationsRepository;
+        this.notificationService = notificationService;
     }
+
 
     @GetMapping("/create-post")
     public String ShowCreatedPostForm(Model model, @AuthenticationPrincipal UserDetails currentUser) {
@@ -114,13 +119,21 @@ public class PostController {
             return "redirect:/login";
         }
 
+        Post post = postService.getById(id);
+        Person liker = personService.findByEmail(currentUser.getUsername());
+        Person postAuthor = post.getAuthor();
+
         postService.incrementLikes(id);
+
+        if (!liker.getEmail().equals(postAuthor.getEmail())) {
+            notificationService.notify(postAuthor, liker.getName() + " liked your post.");
+        }
 
         if ("feed".equals(source)) {
             return "redirect:/feed";
         } else {
-            String email = currentUser.getUsername();
-            return "redirect:/profile/" + email;
+            return "redirect:/profile/" + liker.getEmail();
         }
     }
+
 }
