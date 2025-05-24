@@ -176,8 +176,8 @@ public class InitiativeController {
         // Admin kan inte lämna
         if (me == null || initiative.getCreator().getEmail().equals(email)) {
             String errorMessage = (me == null)
-                    ? "Du är inte med i detta initiativ."
-                    : "Skaparen kan inte lämna sitt eget initiativ.";
+                    ? "You are not a member of this initiative"
+                    : "The creator cannot leave their own initiative.";
 
             Person person = personRepository.findByEmail(email).orElseThrow();
             boolean isParticipant = (me != null);
