@@ -1,21 +1,15 @@
 package com.localzero.api.controller;
 
-import com.localzero.api.entity.Community;
-import com.localzero.api.entity.EcoAction;
-import com.localzero.api.entity.Person;
-import com.localzero.api.entity.Post;
-import com.localzero.api.service.CommunityService;
-import com.localzero.api.service.PostService;
-import com.localzero.api.service.EcoActionService;
-import com.localzero.api.service.PersonService;
+import com.localzero.api.entity.*;
+import com.localzero.api.service.*
 import org.springframework.security.core.Authentication;
-import lombok.AllArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import lombok.AllArgsConstructor;
 
 import java.util.HashSet;
 import java.util.List;
