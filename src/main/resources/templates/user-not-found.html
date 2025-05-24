@@ -1,21 +1,21 @@
 
 <!DOCTYPE html>
-<html lang="sv">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Användare ej hittad</title>
+    <title>User Not found</title>
     <link rel="stylesheet" href="/css/profileStyle.css">
 </head>
 <body>
 
-<!-- Navbar -->
+
 <div th:replace="~{fragments :: navbar}"></div>
 
-<!-- Felmeddelande -->
+
 <div class="error-container">
-    <h1>Oj!</h1>
-    <p th:text="${message}">Användaren hittades inte.</p>
-    <a href="/feed">Tillbaka till flödet</a>
+    <h1>Oh!</h1>
+    <p th:text="${message}">User not found!</p>
+    <a href="/feed">Go back to feed</a>
 </div>
 
 </body>
