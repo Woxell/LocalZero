@@ -83,7 +83,6 @@
                         <p><strong th:text="${post.author.name}">Author</strong></p>
                         <p th:text="${post.content}">Post content</p>
 
-
                         <div th:if="${post.ecoAction != null}" style="font-style: italic; color: darkgreen;">
                             🌱 Eco Action: <span th:text="${post.ecoAction.content}">Eco Content</span>
                             — <span th:text="${post.ecoAction.carbonSavings}">0</span> kg CO₂ saved
@@ -106,7 +105,7 @@
                 <textarea name="content" placeholder="Write your update..." rows="6" required
                           style="width: 100%; margin-bottom: 1rem;"></textarea>
 
-                <!-- Optional: Eco Action logging -->
+               
                 <label for="ecoContent">Eco Action (optional):</label>
                 <select name="ecoContent" id="ecoContent" style="width: 100%; margin: 1rem 0;">
                     <option value="">-- None --</option>
@@ -120,9 +119,10 @@
                 <button type="submit">Post</button>
             </form>
         </div>
+
     </div>
 
-</div> <!-- SLUT på feed-wrapper-container -->
+</div> 
 
 </body>
 </html>
