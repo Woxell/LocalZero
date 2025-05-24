@@ -53,7 +53,7 @@ public class ProfileController {
         Person user = personService.findByEmail(email);
 
 
-        List<Post> posts = postRepository.findByAuthorEmailOrderByCreationDatetimeDesc(email);
+        List<Post> posts = postService.getPostsByAuthorEmail(email);
 
 
 
