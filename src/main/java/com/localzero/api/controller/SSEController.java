@@ -1,7 +1,11 @@
 package com.localzero.api.controller;
 
+import com.localzero.api.entity.Notification;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
+
+import java.util.Map;
 import java.util.concurrent.*;
 
 @RestController
@@ -9,6 +13,7 @@ import java.util.concurrent.*;
 public class SSEController {
 
     private final ConcurrentMap<String, SseEmitter> emitters = new ConcurrentHashMap<>();
+    private final Map<String, SseEmitter> emitters2 = new ConcurrentHashMap<>();
 
     @GetMapping("/messages/{email}")
     public SseEmitter streamMessages(@PathVariable String email) {
@@ -30,4 +35,5 @@ public class SSEController {
             }
         }
     }
+
 }

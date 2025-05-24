@@ -5,8 +5,8 @@ COPY pom.xml .
 COPY src ./src
 RUN mvn clean package -DskipTests
 
-# Use a lightweight JRE for running
-FROM eclipse-temurin:21-jre-alpine
+# Use a lightweight Java 17 JRE for running
+FROM eclipse-temurin:17-jre-alpine
 WORKDIR /app
 COPY --from=build /app/target/*.jar app.jar
 

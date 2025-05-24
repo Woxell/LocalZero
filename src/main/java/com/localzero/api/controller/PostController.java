@@ -1,19 +1,23 @@
 package com.localzero.api.controller;
 
 import com.localzero.api.entity.EcoAction;
+import com.localzero.api.entity.Notification;
 import com.localzero.api.entity.Person;
 import com.localzero.api.enumeration.EcoActionType;
 import com.localzero.api.entity.Post;
-import com.localzero.api.service.EcoActionService;
-import com.localzero.api.service.InitiativeService;
-import com.localzero.api.service.PersonService;
-import com.localzero.api.service.PostService;
+import com.localzero.api.repository.NotificationsRepository;
+import com.localzero.api.service.*;
 import com.localzero.api.template.PostCreator;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @Controller
 public class PostController {
@@ -23,16 +27,22 @@ public class PostController {
     private final InitiativeService inservice;
     private final EcoActionService ecoActionService;
     private final PersonService personService;
+    private final NotificationsRepository notificationsRepository;
+    private final NotificationService notificationService;
 
     public PostController(PostService postService, PostCreator pCreator,
                           InitiativeService inservice, EcoActionService ecoActionService,
-                          PersonService personService) {
+                          PersonService personService, NotificationsRepository notificationsRepository,
+                          NotificationService notificationService) {
         this.postService = postService;
         this.pCreator = pCreator;
         this.inservice = inservice;
         this.ecoActionService = ecoActionService;
         this.personService = personService;
+        this.notificationsRepository = notificationsRepository;
+        this.notificationService = notificationService;
     }
+
 
     @GetMapping("/create-post")
     public String ShowCreatedPostForm(Model model, @AuthenticationPrincipal UserDetails currentUser) {
@@ -48,7 +58,8 @@ public class PostController {
     public String createPost(@RequestParam String content,
                              @RequestParam(required = false) Long initiativeId,
                              @RequestParam(required = false) String ecoContent,
-                             @AuthenticationPrincipal UserDetails currentUser) {
+                             @RequestParam(required = false) MultipartFile image,
+                             @AuthenticationPrincipal UserDetails currentUser) throws IOException {
         if (currentUser == null) {
             return "redirect:/login";
         }
@@ -64,20 +75,40 @@ public class PostController {
                 ecoAction.setAuthorEmail(person.getEmail());
                 ecoAction.setContent(type.getLabel());
                 ecoAction.setCarbonSavings(type.getCarbonSavings());
-                ecoAction.setCommunityId(
-                        person.getCommunities().stream().findFirst().map(c -> c.getId()).orElse(null)
-                );
+
+                Long communityId = person.getCommunities().stream()
+                        .findFirst()
+                        .map(c -> c.getId())
+                        .orElse(1L);
+
+                ecoAction.setCommunityId(communityId);
                 ecoActionService.save(ecoAction);
             }
         }
+        byte[] imageData = null;
+        if (image != null && !image.isEmpty()) {
+            imageData = image.getBytes();
+        }
 
-        Post post = pCreator.create(currentUser.getUsername(), content, initiativeId, ecoAction);
+        Post post = pCreator.create(currentUser.getUsername(), content, initiativeId, ecoAction, imageData);
 
         if (initiativeId != null) {
             return "redirect:/initiatives/" + initiativeId;
         }
 
         return "redirect:/feed";
+    }
+
+    @GetMapping("/posts/image/{id}")
+    @ResponseBody
+    public ResponseEntity<byte[]> getPostImage(@PathVariable long id) {
+        Post post = postService.getById(id);
+        if (post.getImage() != null) {
+            return ResponseEntity.ok()
+                    .contentType(MediaType.IMAGE_JPEG)
+                    .body(post.getImage());
+        }
+        return ResponseEntity.notFound().build();
     }
 
     @PostMapping("/posts/{id}/like")
@@ -88,13 +119,21 @@ public class PostController {
             return "redirect:/login";
         }
 
+        Post post = postService.getById(id);
+        Person liker = personService.findByEmail(currentUser.getUsername());
+        Person postAuthor = post.getAuthor();
+
         postService.incrementLikes(id);
+
+        if (!liker.getEmail().equals(postAuthor.getEmail())) {
+            notificationService.notify(postAuthor, liker.getName() + " liked your post.");
+        }
 
         if ("feed".equals(source)) {
             return "redirect:/feed";
         } else {
-            String email = currentUser.getUsername();
-            return "redirect:/profile/" + email;
+            return "redirect:/profile/" + liker.getEmail();
         }
     }
+
 }
