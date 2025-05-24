@@ -9,9 +9,9 @@ import com.localzero.api.service.PostService;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -27,6 +27,7 @@ public class FeedController {
     private final InitiativeService initiativeService;
 
     @GetMapping("/feed")
+    @Transactional(readOnly = true)
     public String showFeed(Authentication authentication, Model model) {
         String email = authentication.getName();
         Person person = personService.findByEmail(email);
@@ -46,7 +47,6 @@ public class FeedController {
         }
 
         List<Initiative> visibleInitiatives = initiativeService.getPublicOrByCommunities(person.getCommunities());
-
 
         List<Post> postsFromVisibleInitiatives = new ArrayList<>();
         for (Initiative initiative : visibleInitiatives) {

@@ -12,10 +12,12 @@
 
 <div class="form-container">
     <h1>Create New Post</h1>
-
-    <form th:action="@{/create-post}" method="post">
+    <form th:action="@{/create-post}" method="post" enctype="multipart/form-data">
         <label for="content">Post content:</label>
         <textarea name="content" id="content" placeholder="Write your post here" required></textarea>
+
+        <label for="image">Upload Image (optional):</label>
+        <input type="file" name="image" id="image" accept="image/*">
 
         <label for="initiativeId">Choose Initiative (Optional):</label>
         <select name="initiativeId" id="initiativeId">
