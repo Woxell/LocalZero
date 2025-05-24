@@ -4,34 +4,32 @@ import com.localzero.api.entity.EcoAction;
 import com.localzero.api.entity.Person;
 import com.localzero.api.entity.Post;
 import com.localzero.api.repository.CommunityRepository;
-import com.localzero.api.repository.PostRepository;
+import com.localzero.api.entity.Community;
+import com.localzero.api.service.PostService;
 import com.localzero.api.service.EcoActionService;
 import com.localzero.api.service.PersonService;
+import lombok.AllArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.*;
 
+
+import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 @Controller
+@AllArgsConstructor
 public class ProfileController {
 
     private final PersonService personService;
     private final CommunityRepository communityRepository;
     private final EcoActionService ecoActionService;
-    private final PostRepository postRepository;
-
-    public ProfileController(PersonService personService,
-                             CommunityRepository communityRepository,
-                             EcoActionService ecoActionService,
-                             PostRepository postRepository) {
-        this.personService = personService;
-        this.communityRepository = communityRepository;
-        this.ecoActionService = ecoActionService;
-        this.postRepository = postRepository;
-    }
+    private final PostService postService;
 
     @GetMapping("/profile")
     public String getProfile(Model model, @AuthenticationPrincipal UserDetails currentUser) {
@@ -43,7 +41,7 @@ public class ProfileController {
         Person user = personService.findByEmail(email);
 
         // Hämta användarens poster via repository
-        List<Post> posts = postRepository.findByAuthorEmailOrderByCreationDatetimeDesc(email);
+        List<Post> posts = postService.getPostsByAuthorEmail(email);
 
         // Eco actions och total CO₂
         List<EcoAction> actions = ecoActionService.getAllByUser(email);
@@ -56,6 +54,37 @@ public class ProfileController {
         model.addAttribute("allCommunities", communityRepository.findAll());
         model.addAttribute("totalCarbonSavings", totalCarbon);
 
+        return "profile";
+    }
+
+    @PostMapping("/profile/communities")
+    public String updateCommunities(@RequestParam(required = false) List<Long> communityIds,
+                                    Authentication authentication) {
+        String email = authentication.getName();
+        Person user = personService.findByEmail(email);
+
+        Set<Community> selected = (communityIds != null)
+                ? new HashSet<>(communityRepository.findAllById(communityIds))
+                : new HashSet<>();
+        user.setCommunities(selected);
+        personService.save(user);
+        return "redirect:/profile";
+    }
+
+    @GetMapping("/{email}")
+    public String OtherProfile(@PathVariable String email, Model model) {
+        Optional<Person> optionalUser = personService.findOptionalByEmail(email);
+
+        if (optionalUser.isEmpty()) {
+            model.addAttribute("message", "Användaren med e-post '" + email + "' hittades inte.");
+            return "user-not-found";
+        }
+        Person user = optionalUser.get();
+        List<Post> posts = postService.getPostsByAuthorEmail(email);
+        model.addAttribute("user", user);
+        model.addAttribute("posts", posts);
+        model.addAttribute("allCommunities", communityRepository.findAll());
+        model.addAttribute("source", "profile");
         return "profile";
     }
 }

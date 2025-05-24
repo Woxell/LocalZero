@@ -25,7 +25,7 @@ public class EcoAction {
 
      */
 
-    @Column(name = "community_id",nullable = false)
+    @Column(name = "community_id")
     private Long communityId;
 
     private String content;
