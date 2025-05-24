@@ -22,8 +22,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 
 
-
-
 import org.springframework.web.bind.annotation.*;
 
 
@@ -42,6 +40,7 @@ public class ProfileController {
     private final EcoActionService ecoActionService;
     private final PostService postService;
 
+
     @GetMapping("/profile")
     @Transactional(readOnly = true)
     public String getProfile(Model model, @AuthenticationPrincipal UserDetails currentUser) {
@@ -52,10 +51,7 @@ public class ProfileController {
         String email = currentUser.getUsername();
         Person user = personService.findByEmail(email);
 
-
-        List<Post> posts = postRepository.findByAuthorEmailOrderByCreationDatetimeDesc(email);
-
-
+        List<Post> posts = postService.getPostsByAuthorEmail(email);
 
         List<EcoAction> actions = ecoActionService.getAllByUser(email);
         float totalCarbon = actions.stream()
