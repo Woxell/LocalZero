@@ -27,8 +27,10 @@
                     <p th:text="${initiative.description}">Description</p>
                     <p><strong>Plats:</strong> <span th:text="${initiative.location}">Location</span></p>
                     <p><strong>Kategori:</strong> <span th:text="${initiative.category}">Category</span></p>
-                    <p><strong>Start:</strong> <span th:text="${#temporals.format(initiative.startDate, 'yyyy-MM-dd HH:mm')}"></span></p>
-                    <p><strong>Slut:</strong> <span th:text="${#temporals.format(initiative.endDate, 'yyyy-MM-dd HH:mm')}"></span></p>
+                    <p><strong>Start:</strong> <span
+                            th:text="${#temporals.format(initiative.startDate, 'yyyy-MM-dd HH:mm')}"></span></p>
+                    <p><strong>Slut:</strong> <span
+                            th:text="${#temporals.format(initiative.endDate, 'yyyy-MM-dd HH:mm')}"></span></p>
 
                     <div th:if="${isParticipant}">
                         <p style="color: green;">You're in this initiative</p>
@@ -40,7 +42,8 @@
                         </div>
                     </div>
 
-                    <form th:if="${!isParticipant}" th:action="@{'/initiatives/' + ${initiative.id} + '/join'}" method="post">
+                    <form th:if="${!isParticipant}" th:action="@{'/initiatives/' + ${initiative.id} + '/join'}"
+                          method="post">
                         <button type="submit">Join Initiative</button>
                     </form>
                 </div>
@@ -58,11 +61,16 @@
                             <form th:if="${isCreator} and ${participant.person.email != initiative.creator.email}"
                                   th:action="@{'/initiatives/' + ${initiative.id} + '/roles'}"
                                   method="post" style="margin-top: 5px;">
-                                <input type="hidden" name="targetEmail" th:value="${participant.person.email}" />
+                                <input type="hidden" name="targetEmail" th:value="${participant.person.email}"/>
                                 <select name="newRole">
-                                    <option value="MEMBER" th:selected="${participant.role.name() == 'MEMBER'}">MEMBER</option>
-                                    <option value="RESIDENT" th:selected="${participant.role.name() == 'RESIDENT'}">RESIDENT</option>
-                                    <option value="ORGANIZER" th:selected="${participant.role.name() == 'ORGANIZER'}">ORGANIZER</option>
+                                    <option value="MEMBER" th:selected="${participant.role.name() == 'MEMBER'}">MEMBER
+                                    </option>
+                                    <option value="RESIDENT" th:selected="${participant.role.name() == 'RESIDENT'}">
+                                        RESIDENT
+                                    </option>
+                                    <option value="ORGANIZER" th:selected="${participant.role.name() == 'ORGANIZER'}">
+                                        ORGANIZER
+                                    </option>
                                     <!-- ADMIN-rollen är inte tillgänglig för andra än skaparen -->
                                 </select>
                                 <button type="submit" style="font-size: 12px;">Ändra roll</button>
@@ -88,38 +96,39 @@
                             — <span th:text="${post.ecoAction.carbonSavings}">0</span> kg CO₂ saved
                         </div>
 
-                        <p style="font-size: 0.9rem; font-weight: bold;" th:text="${#temporals.format(post.creationDatetime, 'yyyy-MM-dd HH:mm')}"></p>
+                        <p style="font-size: 0.9rem; font-weight: bold;"
+                           th:text="${#temporals.format(post.creationDatetime, 'yyyy-MM-dd HH:mm')}"></p>
                     </div>
                 </div>
             </div>
 
-            </div>
         </div>
     </div>
+</div>
 
-    <div class="feed-wrapper post-form-wrapper" style="flex: 1;">
-        <div class="card-box">
-            <h3>Add a new post</h3>
-            <form th:action="@{/create-post}" method="post">
-                <input type="hidden" name="initiativeId" th:value="${initiative.id}" />
-                <textarea name="content" placeholder="Write your update..." rows="6" required
-                          style="width: 100%; margin-bottom: 1rem;"></textarea>
+<div class="feed-wrapper post-form-wrapper" style="flex: 1;">
+    <div class="card-box">
+        <h3>Add a new post</h3>
+        <form th:action="@{/create-post}" method="post">
+            <input type="hidden" name="initiativeId" th:value="${initiative.id}"/>
+            <textarea name="content" placeholder="Write your update..." rows="6" required
+                      style="width: 100%; margin-bottom: 1rem;"></textarea>
 
-                <!-- Optional: Eco Action logging -->
-                <label for="ecoContent">Eco Action (optional):</label>
-                <select name="ecoContent" id="ecoContent" style="width: 100%; margin: 1rem 0;">
-                    <option value="">-- None --</option>
-                    <option value="Biked to work">Biked to work</option>
-                    <option value="Used reusable bags">Used reusable bags</option>
-                    <option value="Composted food waste">Composted food waste</option>
-                    <option value="Recycled electronics">Recycled electronics</option>
-                    <option value="Took public transport">Took public transport</option>
-                </select>
+            <!-- Optional: Eco Action logging -->
+            <label for="ecoContent">Eco Action (optional):</label>
+            <select name="ecoContent" id="ecoContent" style="width: 100%; margin: 1rem 0;">
+                <option value="">-- None --</option>
+                <option value="Biked to work">Biked to work</option>
+                <option value="Used reusable bags">Used reusable bags</option>
+                <option value="Composted food waste">Composted food waste</option>
+                <option value="Recycled electronics">Recycled electronics</option>
+                <option value="Took public transport">Took public transport</option>
+            </select>
 
-                <button type="submit">Post</button>
-            </form>
-        </div>
+            <button type="submit">Post</button>
+        </form>
     </div>
+</div>
 
 </div>
 
