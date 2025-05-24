@@ -5,6 +5,7 @@ import com.localzero.api.enumeration.InitiativeCategory;
 import com.localzero.api.enumeration.UserRole;
 import com.localzero.api.repository.*;
 import com.localzero.api.service.InitiativeService;
+import com.localzero.api.service.NotificationService;
 import com.localzero.api.template.InitiativeCreator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -31,6 +32,8 @@ public class InitiativeController {
     private final InitiativeService initiativeService;
     private final PostRepository postRepository;
     private final InitiativeParticipantRepository initiativeParticipantRepository;
+    private final NotificationService notificationService;
+
 
     @PostMapping("/create")
     public String createInitiative(@RequestParam String title,
@@ -71,6 +74,19 @@ public class InitiativeController {
         admin.setJoinedAt(LocalDateTime.now());
 
         initiativeParticipantRepository.save(admin);
+
+        for (Community membership : selectedCommunities) {
+            String memberEmail = membership.getMemberEmail();
+
+            if (!memberEmail.equals(creator.getEmail())) {
+                personRepository.findByEmail(memberEmail).ifPresent(member ->
+                        notificationService.notify(
+                                member,
+                                "A new initiative \"" + title + "\" was created in your community."
+                        )
+                );
+            }
+        }
 
         return "redirect:/feed";
     }

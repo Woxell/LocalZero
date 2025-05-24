@@ -36,4 +36,8 @@ public class PostService {
         post.setLikesCount(post.getLikesCount() + 1);
         postRepository.save(post);
     }
+    public Post getById(long postId) {
+        return postRepository.findById(postId).orElseThrow();
+    }
+
 }
