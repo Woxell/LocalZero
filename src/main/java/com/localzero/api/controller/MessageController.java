@@ -1,7 +1,6 @@
 package com.localzero.api.controller;
 
 import com.localzero.api.entity.DirectMessage;
-import com.localzero.api.entity.Notification;
 import com.localzero.api.entity.Person;
 import com.localzero.api.service.DMService;
 import com.localzero.api.service.NotificationService;
@@ -30,7 +29,7 @@ public class MessageController {
     private DMService dmService;
     private NotificationService notificationService;
     private PersonService personService;
-    private SSEController sseController;
+    private SSEProxy sseProxy;
 
     @GetMapping
     public String renderChatPage(Authentication authentication, Model model) {
@@ -80,15 +79,9 @@ public class MessageController {
         DirectMessage saved = dmService.save(message);
 
         // Notify receiver via SSE
-        sseController.sendMessageToReceiver(message.getReceiverEmail(), saved);
+        sseProxy.authenticateAndNotifyReceiver(message.getReceiverEmail(), saved);
 
-        Notification n = new Notification();
-        n.setPerson(personService.findByEmail(message.getReceiverEmail()));
-        n.setDescription("New Message from " + message.getSenderEmail());
-        n.setRead(false);
-        n.setCreationDatetime(LocalDateTime.now()); //Vet inte om det behövs riktigt
-        notificationService.save(n);
-
+        notificationService.notify(personService.findByEmail(message.getReceiverEmail()), "New Message from " + message.getSenderEmail());
         return saved;
     }
 
@@ -107,13 +100,7 @@ public class MessageController {
         message.setImageData(file.getBytes());
 
         DirectMessage saved = dmService.save(message);
-
-        Notification n = new Notification();
-        n.setPerson(personService.findByEmail(message.getReceiverEmail()));
-        n.setDescription("New Message from " + message.getSenderEmail());
-        n.setRead(false);
-        n.setCreationDatetime(LocalDateTime.now()); //Vet inte om det behövs riktigt, men kanske för att sortera notifications!!
-        notificationService.save(n);
+        notificationService.notify(personService.findByEmail(receiverEmail), "New Image Message from " + senderEmail);
         return saved;
     }
 

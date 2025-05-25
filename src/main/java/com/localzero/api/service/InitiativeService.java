@@ -1,13 +1,14 @@
 package com.localzero.api.service;
 
+import com.localzero.api.Logger;
 import com.localzero.api.entity.Community;
 import com.localzero.api.entity.Initiative;
 import com.localzero.api.entity.Person;
 import com.localzero.api.repository.InitiativeRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import com.localzero.api.repository.PersonRepository;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
@@ -16,21 +17,29 @@ import java.util.List;
 import java.util.Set;
 
 @Service
-@AllArgsConstructor
 public class InitiativeService {
 
+    @Autowired
     private final InitiativeRepository initiativeRepository;
+    @Autowired
     private final PersonService personService;
+    private final Logger logger = Logger.getInstance();
 
+    public InitiativeService(InitiativeRepository initiativeRepository, PersonService personService) {
+        this.initiativeRepository = initiativeRepository;
+        this.personService = personService;
+    }
     public Initiative findById(Long id) {
         return initiativeRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 
     public Initiative save(Initiative initiative) {
-        if (initiative.getCreator() == null) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Initiative must have a creator");
+        if (initiative.getCreator() == null)
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, logger.logError("Initiative creator cannot be null."));
+        else {
+            logger.log(initiative.getCreator().getName() + " created initiative: " + initiative.getTitle());
+            return initiativeRepository.save(initiative);
         }
-        return initiativeRepository.save(initiative);
     }
 
     public List<Initiative> getAll(){

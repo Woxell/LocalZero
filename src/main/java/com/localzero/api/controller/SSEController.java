@@ -24,8 +24,9 @@ public class SSEController {
         return emitter;
     }
 
-    // Call this method when a new message is sent
+    // SSEProxy calls this method when a new message is authorized to be sent
     public void sendMessageToReceiver(String receiverEmail, Object message) {
+        System.out.println("Sending message to receiver: " + receiverEmail);
         SseEmitter emitter = emitters.get(receiverEmail);
         if (emitter != null) {
             try {
@@ -35,5 +36,4 @@ public class SSEController {
             }
         }
     }
-
 }

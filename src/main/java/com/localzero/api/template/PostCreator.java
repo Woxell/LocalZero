@@ -4,29 +4,24 @@ import com.localzero.api.entity.EcoAction;
 import com.localzero.api.entity.Initiative;
 import com.localzero.api.entity.Person;
 import com.localzero.api.entity.Post;
-import com.localzero.api.repository.InitiativeRepository;
-import com.localzero.api.repository.PersonRepository;
-import com.localzero.api.repository.PostRepository;
+import com.localzero.api.service.InitiativeService;
+import com.localzero.api.service.PersonService;
+import com.localzero.api.service.PostService;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 
 @Component
+@AllArgsConstructor
 public class PostCreator {
 
-    private final PostRepository postRepository;
-    private final PersonRepository personRepository;
-    private final InitiativeRepository initiativeRepository;
-
-    public PostCreator(PostRepository postRepository, PersonRepository personRepository, InitiativeRepository initiativeRepository) {
-        this.postRepository = postRepository;
-        this.personRepository = personRepository;
-        this.initiativeRepository = initiativeRepository;
-    }
+    private final PostService postService;
+    private final PersonService personService;
+    private final InitiativeService initiativeService;
 
     public Post create(String email, String content, Long initiativeId, EcoAction ecoAction, byte[] imageData) {
-        Person person = personRepository.findByEmail(email).orElseThrow(() ->
-                new IllegalArgumentException("User not found with email: " + email));
+        Person person = personService.findByEmail(email);
 
         Post post = new Post();
         post.setAuthor(person);
@@ -34,7 +29,7 @@ public class PostCreator {
         post.setCreationDatetime(LocalDateTime.now());
 
         if (initiativeId != null) {
-            Initiative initiative = initiativeRepository.findById(initiativeId).orElse(null);
+            Initiative initiative = initiativeService.findById(initiativeId);
             post.setInitiative(initiative);
         }
 
@@ -45,6 +40,6 @@ public class PostCreator {
             post.setImage(imageData);
         }
 
-        return postRepository.save(post);
+        return postService.save(post);
     }
 }
