@@ -7,4 +7,10 @@ import java.util.List;
 
 public interface PostRepository extends JpaRepository<Post, Long> {
     List<Post> findByAuthorEmailOrderByCreationDatetimeDesc(String authorEmail);
+
+    List<Post> findByInitiativeIsNullOrderByCreationDatetimeDesc();
+
+    List<Post> findByInitiativeIdOrderByCreationDatetimeDesc(Long initiativeId);
+
+
 }

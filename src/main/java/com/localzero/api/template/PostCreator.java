@@ -1,60 +1,45 @@
 package com.localzero.api.template;
 
+import com.localzero.api.entity.EcoAction;
 import com.localzero.api.entity.Initiative;
 import com.localzero.api.entity.Person;
 import com.localzero.api.entity.Post;
-import com.localzero.api.repository.InitiativeRepository;
-import com.localzero.api.repository.PostRepository;
+import com.localzero.api.service.InitiativeService;
 import com.localzero.api.service.PersonService;
-import org.springframework.stereotype.Service;
+import com.localzero.api.service.PostService;
+import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 
-@Service
-public class PostCreator extends template.AbstractCreator<Post> {
+@Component
+@AllArgsConstructor
+public class PostCreator {
 
-    private final PostRepository postRepo;
+    private final PostService postService;
     private final PersonService personService;
-    private final InitiativeRepository initiativeRepository;
+    private final InitiativeService initiativeService;
 
-    public PostCreator(PostRepository postRepo, PersonService personService, InitiativeRepository initiativeRepository){
-        this.postRepo = postRepo;
-        this.personService = personService;
-        this.initiativeRepository = initiativeRepository;
-    }
+    public Post create(String email, String content, Long initiativeId, EcoAction ecoAction, byte[] imageData) {
+        Person person = personService.findByEmail(email);
 
-    @Override
-    protected Person loadUser(String email) {
-        return personService.findByEmail(email);
-    }
-
-    @Override
-    protected Post build(Person user,String content) {
         Post post = new Post();
-        post.setAuthor(user);
+        post.setAuthor(person);
         post.setContent(content);
-        post.setLikesCount(0);
-        return post;
-    }
+        post.setCreationDatetime(LocalDateTime.now());
 
-    public Post create(String email, String content,Long initiativeId){
-        Post post = super.create(email,content);
-        if (initiativeId != null){
-            Initiative initiative = initiativeRepository.findById(initiativeId).orElseThrow();
+        if (initiativeId != null) {
+            Initiative initiative = initiativeService.findById(initiativeId);
             post.setInitiative(initiative);
         }
-        return postRepo.save(post);
+
+        if (ecoAction != null) {
+            post.setEcoAction(ecoAction);
+        }
+        if (imageData != null && imageData.length > 0) {
+            post.setImage(imageData);
+        }
+
+        return postService.save(post);
     }
-
-    @Override
-    protected void setTimestamps(Post entity) {
-        entity.setCreationDatetime(LocalDateTime.now());
-    }
-
-    @Override
-    protected Post persist(Post entity) {
-        return postRepo.save(entity);
-    }
-
-
 }

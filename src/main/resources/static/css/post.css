@@ -1,0 +1,45 @@
+textarea, select {
+    border: 2px solid #ffb6c1;
+    border-radius: 10px;
+    padding: 10px;
+    font-size: 16px;
+    width: 100%;
+    margin-bottom: 12px;
+}
+
+textarea:focus, select:focus {
+    outline: none;
+    border-color: #ff77b9;
+    box-shadow: 0 0 5px #ff7bbe;
+}
+
+button {
+    background-color: #fd80bf;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: rgba(255, 123, 194, 0.99);
+}
+
+.flex-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.form-container {
+    border: 2px solid #ffcce5;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    backdrop-filter: blur(15px);
+    padding: 2rem;
+    max-width: 500px;
+    margin: 2rem auto;
+    box-shadow: 0 0 25px rgba(255, 182, 193, 0.4);
+    overflow-y: auto;
+}

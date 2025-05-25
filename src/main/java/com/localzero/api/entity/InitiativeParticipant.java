@@ -1,53 +1,32 @@
-/*
 package com.localzero.api.entity;
 
-/**
- * @author André , Emil
- */
-
+import com.localzero.api.enumeration.UserRole;
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
 
-import java.io.Serializable;
-/*
+import java.time.LocalDateTime;
+
 @Entity
+@Table(name = "initiative_membership")
 @Data
-//@IdClass(InitiativeParticipantId.class)
+@NoArgsConstructor
+@AllArgsConstructor
 public class InitiativeParticipant {
 
     @EmbeddedId
-    private InitiativeParticipantId initiativeParticipantId = new InitiativeParticipantId();
-/*
-    @Id
-    @Column(name = "initiative_id", nullable = false)
-    private Long initiativeId;
+    private InitiativeParticipantId id = new InitiativeParticipantId();
 
- */
-/*
-    @Id
-    @Column(name = "participant_email", nullable = false)
-    private String participantEmail;
-
- */
-/*
-    @ManyToOne
-    @MapsId("initiativeId")
-    @JoinColumn(name = "initiative_id", referencedColumnName = "id", insertable = false, updatable = false)
+    @ManyToOne @MapsId("initiativeId")
     private Initiative initiative;
 
-    @ManyToOne
-    @MapsId("participantEmail")
-    @JoinColumn(name = "participant_email", referencedColumnName = "email", insertable = false, updatable = false)
-    private Person participant;
-}
-/*
-@Data
-class InitiativeParticipantId implements Serializable {
-    private Long initiativeId;
-    private String participantEmail;
-}
+    @ManyToOne @MapsId("personEmail")
+    private Person person;
 
- */
+    @Enumerated(EnumType.STRING)
+    private UserRole role;
+
+    private LocalDateTime joinedAt;
+}
 
 
 

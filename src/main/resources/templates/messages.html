@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <title>LocalZero - Direct Messages</title>
     <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/dm.css">
+    <script src="/js/dm.js" defer></script>
 </head>
 <body>
 
@@ -11,20 +13,37 @@
 
 <div class="messages-layout">
     <div class="dm-container">
-        <h1>Direct Messages</h1>
+        <div id="clientInfo">
+            <strong th:text="${user.name}">User Name placeholder </strong>
+            (<span th:text="${user.email}">user@example.com placeholder</span>)
+            <input type="hidden" id="clientEmail" th:value="${user.email}" />
+        </div>
+        <button class="new-chat-btn" onclick="openNewChatDialog()">New Chat</button>
         <div class="dm-list">
-            <div class="dm-item" th:each="message : ${messages}">
-                <div class="dm-header">
-                    <span th:text="${message.sender.name}">Sender Name</span>
-                    <span th:text="${message.timestamp}">Timestamp</span>
-                </div>
-                <div class="dm-content" th:text="${message.content}">Message Content</div>
-            </div>
+            <!--<div th:if="${chatPartners != null}">
+                <div th:each="email : ${chatPartners}"
+                     class="dm-list-item"
+                     th:attr="onclick='startChat(\'' + ${email} + '\')'"
+                     th:text="${email}"></div>
+            </div> -->
         </div>
     </div>
 
     <div class="chat-container">
         <div th:replace="~{fragments :: chat}"></div>
+    </div>
+</div>
+
+<div class="dialog-backdrop" id="dialogBackdrop"></div>
+<div class="new-chat-dialog" id="newChatDialog">
+    <h2>Who do you want to chat with?</h2>
+    <div th:if="${persons != null}">
+        <div th:each="person : ${persons}"
+             th:if="${person.email} != ${user.email}"
+             class="person-item"
+             th:attr="onclick='startChat(\'' + ${person.email} + '\')'">
+            <span th:text="${person?.name}">Person Name</span>
+        </div>
     </div>
 </div>
 </body>

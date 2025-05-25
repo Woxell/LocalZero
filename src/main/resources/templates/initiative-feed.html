@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>LocalZero - Initiative Feed</title>
+    <link rel="stylesheet" href="/css/main.css">
+</head>
+<body>
+
+<div th:replace="~{fragments :: navbar}"></div>
+
+<div class="feed-wrapper">
+    <h1>All visible initiatives:</h1>
+
+    <div th:each="i : ${initiatives}">
+        <a th:href="@{'/initiatives/' + ${i.id}}" style="text-decoration: none;">
+            <div class="feed-post">
+
+                <p th:if="${joinedInitiativeIds.contains(i.id)}" style="color: green; font-weight: bold">
+                    You belong to this initiative
+                </p>
+                <div class="feed-post-header">
+                    <strong th:text="${i.title}">Titel</strong>
+                    <span th:text="${#temporals.format(i.creationDatetime, 'yyyy-MM-dd HH:mm')}"></span>
+                </div>
+                <div class="feed-post-content">
+                    <p th:text="'Location: ' + ${i.location}"></p>
+                    <p th:text="${i.description}"></p>
+                    <p><strong>Category:</strong> <span th:text="${i.category}"></span></p>
+                    <p><strong>Start:</strong> <span
+                            th:text="${#temporals.format(i.startDate, 'yyyy-MM-dd HH:mm')}"></span>
+                    </p>
+                    <p><strong>End:</strong> <span th:text="${#temporals.format(i.endDate, 'yyyy-MM-dd HH:mm')}"></span>
+                    </p>
+                    <p><strong>Community:</strong></p>
+                    <ul>
+                        <li th:each="c : ${i.communities}" th:text="${c.memberEmail}"></li>
+                    </ul>
+                </div>
+            </div>
+        </a>
+    </div>
+</div>
+
+</body>
+</html>

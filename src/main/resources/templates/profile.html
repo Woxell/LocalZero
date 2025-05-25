@@ -7,10 +7,11 @@
 </head>
 <body>
 
-<div th:replace="fragments :: navbar"></div>
-<div th:replace="~{fragments :: profile(user=${user}, posts=${posts})}"></div>
+<div th:replace="~{fragments :: navbar}"></div>
 
-
+<div class="app-content">
+    <div th:replace="~{fragments :: profile(user=${user}, posts=${posts})}"></div>
+</div>
 
 </body>
 </html>

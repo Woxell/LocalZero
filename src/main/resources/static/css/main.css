@@ -5,18 +5,32 @@
     font-family: 'Segoe UI', sans-serif;
 }
 
-*{
+* {
     font-family: 'Segoe UI', sans-serif;
 }
 
+.app-content {
+    height: calc(100vh - 60px);
+    overflow-y: auto;
+}
+
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', sans-serif;
+
+}
+
 body {
-    min-height: 100vh;
-    padding-top: 70px;
     background-image: url("https://www.psdstack.com/wp-content/uploads/2019/08/copyright-free-images-750x420.jpg");
     background-repeat: no-repeat;
     background-position: center;
     background-size: cover;
-    font-family: 'Segoe UI', sans-serif;
+    background-attachment: fixed;
+    min-height: 100vh;
+    padding-top: 53px;
 }
 
 .navbar {
@@ -26,8 +40,8 @@ body {
     width: 100%;
     z-index: 1000;
     display: flex;
-    flex-wrap: wrap; /* Möjliggör radbrytning */
-    justify-content: center; /* Centrera innehåll i flera rader */
+    flex-wrap: wrap;
+    justify-content: center;
     gap: 1rem;
     background-color: #2c3e50;
     padding: 1rem 2rem;
@@ -40,6 +54,7 @@ body {
     font-weight: bold;
     margin-left: 0.5rem;
 }
+
 .navbar a:hover {
     text-decoration: underline;
 }
@@ -55,8 +70,57 @@ body {
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
 }
 
+.chat-message {
+    margin-bottom: 15px;
+    padding: 10px;
+    background: #f1f1f1;
+    border-radius: 6px;
+}
 
-.like-button{
+.messages-layout {
+    display: flex;
+    height: calc(100vh - 60px);
+    overflow: hidden;
+}
+
+.dm-container {
+    width: 30%;
+    border-right: 1px solid #ddd;
+    overflow-y: scroll;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.9);
+}
+
+.chat-container {
+    width: 70%;
+    overflow-y: scroll;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.9);
+}
+
+
+.dm-container::-webkit-scrollbar,
+.chat-container::-webkit-scrollbar {
+    width: 8px;
+}
+
+.dm-container::-webkit-scrollbar-thumb,
+.chat-container::-webkit-scrollbar-thumb {
+    background-color: #888;
+    border-radius: 4px;
+}
+
+.dm-item {
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+    cursor: pointer;
+}
+
+.dm-item:hover {
+    background-color: #f5f5f5;
+}
+
+.like-button {
     background: none;
     border: none;
     cursor: pointer;
@@ -64,11 +128,13 @@ body {
     padding: 0;
 }
 
+
 .like-button:hover{
+
     tansform: scale(1.1);
 }
 
-.post-footer{
+.post-footer {
     text-align: right;
     font-size: 0.8rem;
     color: #555;
@@ -120,6 +186,7 @@ body {
     font-weight: bold;
     transition: background-color 0.3s;
 }
+
 .feed-actions button:hover {
     background-color: white;
 }
@@ -131,14 +198,14 @@ body {
 
 .form-container,
 .create-initiative-container {
-    background-color: rgba(255,255,255,0.1);
-    border: 2px solid rgba(255,255,255,0.3);
+    background-color: rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(255, 255, 255, 0.3);
     border-radius: 15px;
     backdrop-filter: blur(15px);
     padding: 2rem;
     max-width: 350px;
     margin: 2rem auto;
-    box-shadow: 0 0 15px rgba(0,0,0,0.2);
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
 }
 
 .form-container h1,
@@ -239,3 +306,69 @@ button:hover {
     margin-bottom: 1rem;
 }
 
+.post-ball {
+    border-radius: 15px;
+    background-color: rgba(141, 68, 68, 0.6);
+    padding: 4px 10px;
+    font-size: 0.9em;
+}
+
+.initiative-islands {
+    display: flex;
+    justify-content: space-between;
+    gap: 2rem;
+    flex-wrap: wrap;
+}
+
+.card-box {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 16px;
+    padding: 1.5rem;
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    color: black;
+    min-width: 300px;
+}
+
+.initiative-left-island {
+    flex: 2;
+}
+
+.initiative-right-island {
+    flex: 1;
+    align-self: flex-start;
+}
+
+.participant-card {
+    border-top: 1px solid currentColor;
+    margin-top: 0.5rem;
+    padding-top: 0.5rem;
+}
+
+.feed-wrapper-container{
+    display: flex;
+    justify-content: space-between;
+    gap: 2rem;
+    padding: 2rem;
+    flex-wrap: wrap;
+}
+.initiative-info-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 2rem;
+    flex-wrap: wrap;
+}
+
+.initiative-details,
+.initiative-participants {
+    flex: 1;
+    min-width: 250px;
+}
+.post-form-wrapper{
+    align-self: flex-start;
+    max-width: 400px;
+    width: 100%;
+    height: auto;
+}

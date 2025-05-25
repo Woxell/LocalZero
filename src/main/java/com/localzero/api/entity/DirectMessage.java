@@ -4,6 +4,7 @@ package com.localzero.api.entity;
  * @author: Adrian , Emil
  */
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -11,7 +12,6 @@ import java.time.LocalDateTime;
 
 @Entity
 @Data
-//@IdClass(DirectMessageId.class)
 public class DirectMessage {
 
     @Id
@@ -28,10 +28,12 @@ public class DirectMessage {
 
     @ManyToOne
     @JoinColumn(name = "sender_email", referencedColumnName = "email", insertable = false, updatable = false)
+    @JsonIgnore
     private Person sender;
 
     @ManyToOne
     @JoinColumn(name = "receiver_email", referencedColumnName = "email", insertable = false, updatable = false)
+    @JsonIgnore
     private Person receiver;
 
     @Column(name = "content", nullable = false)

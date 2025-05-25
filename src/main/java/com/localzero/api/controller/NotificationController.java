@@ -1,31 +1,49 @@
 package com.localzero.api.controller;
 
 import com.localzero.api.entity.Notification;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.localzero.api.service.NotificationService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import com.localzero.api.repository.NotificationsRepository;
+
 import java.util.List;
 
-@RestController
+@Controller
 @RequestMapping("/notifications")
+@RequiredArgsConstructor
 public class NotificationController {
 
-    @Autowired
-    private NotificationsRepository notificationsRepository;
+    private final NotificationService notificationService;
 
     @GetMapping
-    public List<Notification> getUnread (@RequestParam String email) {
-
-        return notificationsRepository.findByPersonEmailAndIsReadFalse(email);
-
-
+    @ResponseBody
+    public List<Notification> getUnread(@RequestParam String email) {
+        return notificationService.getUnreadNotificationsBy(email);
     }
 
-    @PutMapping ("/{id}/read")
+    @PutMapping("/{id}/read")
     public void markAsRead(@PathVariable long id) {
-        Notification n = notificationsRepository.findById(id).orElseThrow();
+        Notification n = notificationService.findById(id);
         n.setRead(true);
-        notificationsRepository.save(n);
+        notificationService.save(n);
     }
 
+    @GetMapping("/ui")
+    public String showNotifications(Authentication authentication, Model model) {
+        String email = authentication.getName();
+        List<Notification> notifications = getUnread(email);
+        model.addAttribute("notifications", notifications);
+        return "notifications";
+    }
+
+    @PostMapping("/{id}/read-ui")
+    public String markAsReadAndReturn(@PathVariable long id) {
+        Notification n = notificationService.findById(id);
+        n.setRead(true);
+        notificationService.save(n);
+        return "redirect:/notifications/ui";
+    }
 }
+
