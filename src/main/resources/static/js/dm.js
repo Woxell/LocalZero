@@ -1,4 +1,4 @@
-const baseURL = 'https://localzero.fly.dev';
+const baseURL = 'https://localzero.se';
 
 function openNewChatDialog() {
     document.getElementById('dialogBackdrop').style.display = 'block';
