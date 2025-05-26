@@ -18,8 +18,16 @@
         <input type="password" id="password" name="password" required>
     </div>
     <button type="submit">Login</button>
-    <p>Don't have an account? <a th:href="@{/register}" style="color: #90cdf4">Register here</a></p>
+    <p id="register-link">
+        Don't have an account? <a th:href="@{/register}">Register here</a>
+    </p>
+    <div th:if="${param.error}" class="error-message">
+        Invalid email or password.
+    </div>
 
+    <script th:if="${param.error}" th:inline="javascript">
+        console.log("Login error: [[${param.error}]]");
+    </script>
 </form>
 </section>
 </body>

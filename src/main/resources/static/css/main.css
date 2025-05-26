@@ -372,3 +372,22 @@ button:hover {
     width: 100%;
     height: auto;
 }
+
+#register-link {
+    margin-top: 1.5em;
+    text-align: center;
+    font-size: 1.05em;
+    color: #555;
+    background: #f0f4f8;
+    padding: 0.75em 1em;
+    border-radius: 6px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+}
+#register-link a {
+    color: #3182ce;
+    font-weight: bold;
+    text-decoration: underline;
+}
+#register-link a:hover {
+    color: #2b6cb0;
+}
