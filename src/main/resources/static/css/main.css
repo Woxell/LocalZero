@@ -24,7 +24,7 @@ html, body {
 }
 
 body {
-    background-image: url('/css/empty-boat-at-sea.jpg');
+    background-image: url('/images/empty-boat-at-sea.jpg');
     background-repeat: no-repeat;
     background-position: center;
     background-size: cover;
