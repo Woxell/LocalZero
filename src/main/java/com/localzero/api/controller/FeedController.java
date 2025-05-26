@@ -22,9 +22,9 @@ import java.util.Set;
 @AllArgsConstructor
 public class FeedController {
 
+    private final InitiativeService initiativeService;
     private final PersonService personService;
     private final PostService postService;
-    private final InitiativeService initiativeService;
 
     @GetMapping("/feed")
     @Transactional(readOnly = true)

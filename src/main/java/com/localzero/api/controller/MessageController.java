@@ -1,19 +1,17 @@
 package com.localzero.api.controller;
 
 import com.localzero.api.entity.DirectMessage;
-import com.localzero.api.entity.Notification;
 import com.localzero.api.entity.Person;
-import com.localzero.api.repository.DirectMessageRepository;
+import com.localzero.api.service.DMService;
+import com.localzero.api.service.NotificationService;
 import com.localzero.api.service.PersonService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import com.localzero.api.repository.NotificationsRepository;
-import com.localzero.api.repository.PersonRepository;
 import org.springframework.security.core.Authentication;
 
 import java.io.IOException;
@@ -24,32 +22,22 @@ import java.util.Set;
 import java.util.List;
 
 @Controller
+@AllArgsConstructor
 @RequestMapping("/messages")
 public class MessageController {
 
-    @Autowired
-    private DirectMessageRepository directMessageRepository;  //repository object som Spring Boot skapar varje gång vi kallar directMessageRepository
-    @Autowired
-    private NotificationsRepository notificationRepo;
-    @Autowired
-    private PersonRepository personRepo;
-
-    @Autowired
-    private SSEController sseController;
-
+    private DMService dmService;
+    private NotificationService notificationService;
     private PersonService personService;
-
-    public MessageController(PersonService personService) {
-        this.personService = personService;
-    }
+    private SSEProxy sseProxy;
 
     @GetMapping
     public String renderChatPage(Authentication authentication, Model model) {
         String loggedInUserEmail = authentication.getName(); // Get the logged-in user's email
 
         List<DirectMessage> messages = new ArrayList<>();
-        messages.addAll(directMessageRepository.findByReceiverEmail(loggedInUserEmail));
-        messages.addAll(directMessageRepository.findBySenderEmail(loggedInUserEmail));
+        messages.addAll(dmService.findByReceiverEmail(loggedInUserEmail));
+        messages.addAll(dmService.findBySenderEmail(loggedInUserEmail));
 
         List<Person> persons = personService.findAll();
         for (Person p : persons)
@@ -65,7 +53,7 @@ public class MessageController {
         model.addAttribute("persons", persons);
         model.addAttribute("user", personService.findByEmail(loggedInUserEmail));
 
-        return "messages"; // Resolves messages.html
+        return "messages";
     }
 
     @GetMapping("/chatpartners")
@@ -73,8 +61,8 @@ public class MessageController {
     public Set<String> getChatPartners(Authentication authentication) {
         String loggedInUserEmail = authentication.getName();
         List<DirectMessage> messages = new ArrayList<>();
-        messages.addAll(directMessageRepository.findByReceiverEmail(loggedInUserEmail));
-        messages.addAll(directMessageRepository.findBySenderEmail(loggedInUserEmail));
+        messages.addAll(dmService.findByReceiverEmail(loggedInUserEmail));
+        messages.addAll(dmService.findBySenderEmail(loggedInUserEmail));
         Set<String> chatPartners = new HashSet<>();
         for (DirectMessage m : messages) {
             if (!m.getSenderEmail().equals(loggedInUserEmail)) chatPartners.add(m.getSenderEmail());
@@ -88,18 +76,12 @@ public class MessageController {
     public DirectMessage sendMessage(@RequestBody DirectMessage message, Authentication authentication) {
         message.setCreationDatetime(LocalDateTime.now());
         message.setSenderEmail(authentication.getName());
-        DirectMessage saved = directMessageRepository.save(message);
+        DirectMessage saved = dmService.save(message);
 
         // Notify receiver via SSE
-        sseController.sendMessageToReceiver(message.getReceiverEmail(), saved);
+        sseProxy.authenticateAndNotifyReceiver(message.getReceiverEmail(), saved);
 
-        Notification n = new Notification();
-        n.setPerson(personRepo.findById(message.getReceiverEmail()).orElseThrow());
-        n.setDescription("New Message from " + message.getSenderEmail());
-        n.setRead(false);
-        n.setCreationDatetime(LocalDateTime.now()); //Vet inte om det behövs riktigt
-        notificationRepo.save(n);
-
+        notificationService.notify(personService.findByEmail(message.getReceiverEmail()), "New Message from " + message.getSenderEmail());
         return saved;
     }
 
@@ -117,21 +99,15 @@ public class MessageController {
         message.setContent("image");
         message.setImageData(file.getBytes());
 
-        DirectMessage saved = directMessageRepository.save(message);
-
-        Notification n = new Notification();
-        n.setPerson(personRepo.findById(message.getReceiverEmail()).orElseThrow());
-        n.setDescription("New Message from " + message.getSenderEmail());
-        n.setRead(false);
-        n.setCreationDatetime(LocalDateTime.now()); //Vet inte om det behövs riktigt, men kanske för att sortera notifications!!
-        notificationRepo.save(n);
+        DirectMessage saved = dmService.save(message);
+        notificationService.notify(personService.findByEmail(receiverEmail), "New Image Message from " + senderEmail);
         return saved;
     }
 
     @GetMapping("/image/{id}")
     @ResponseBody
     public ResponseEntity<byte[]> getImage(@PathVariable long id) {  //Skickar tillbaka bildens innehåll som bytes
-        DirectMessage message = directMessageRepository.findById(id).orElseThrow();
+        DirectMessage message = dmService.findById(id);
         return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(message.getImageData());
     }
 
@@ -140,7 +116,7 @@ public class MessageController {
     public List<DirectMessage> getMessages(@PathVariable String email, Authentication authentication) { //@RequestParam får då users mail. Frontend viktigt att bestämma users mail på rätt sätt! Så att denna metod kan hitta rätt
         String loggedInUserEmail = authentication.getName();
 
-        List<DirectMessage> conversation = directMessageRepository.findConversationBetween(loggedInUserEmail, email);
+        List<DirectMessage> conversation = dmService.findConversationBetween(loggedInUserEmail, email);
 
         if (conversation.isEmpty()) {
             DirectMessage initialMessage = new DirectMessage();
@@ -148,7 +124,7 @@ public class MessageController {
             initialMessage.setReceiverEmail(email);
             initialMessage.setContent("Conversation started");
             initialMessage.setCreationDatetime(LocalDateTime.now());
-            directMessageRepository.save(initialMessage);
+            dmService.save(initialMessage);
             conversation.add(initialMessage);
         }
 

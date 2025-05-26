@@ -12,7 +12,6 @@ import java.time.LocalDateTime;
 
 @Entity
 @Data
-//@IdClass(DirectMessageId.class)
 public class DirectMessage {
 
     @Id

@@ -28,6 +28,7 @@
             <label for="endDate">End Date and time:</label><br>
             <input type="datetime-local" name="endDate" id="endDate" required><br><br>
 
+
             <label for="category">Category:</label><br>
             <select name="category" id="category" required>
                 <option th:each="cat : ${categories}"
@@ -35,6 +36,7 @@
                         th:text="${cat}"
                 ></option>
             </select><br><br>
+
 
             <label for="isPublic">Public Initiative?</label>
             <input type="checkbox" name="isPublic" id="isPublic" value="true"><br><br>

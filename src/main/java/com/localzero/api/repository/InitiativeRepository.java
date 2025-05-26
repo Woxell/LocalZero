@@ -19,7 +19,6 @@ public interface InitiativeRepository extends JpaRepository<Initiative,Long> {
     List<Initiative> findByParticipantEmail(@Param("email") String email);
     List<Initiative> findByIsPublicTrueOrCommunitiesContaining(Community community);
     List<Initiative> findByIsPublicTrue();
-
     List<Initiative> findByIsPublicTrueOrCommunitiesIn(Set<Community> communities);
 
 }

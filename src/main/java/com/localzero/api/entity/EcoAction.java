@@ -18,13 +18,6 @@ public class EcoAction {
     @Column(name = "author_email",nullable = false)
     private String authorEmail;
 
-    /*
-    @Id
-    @Column(name = "author_email")
-    private String authorEmail;
-
-     */
-
     @Column(name = "community_id")
     private Long communityId;
 

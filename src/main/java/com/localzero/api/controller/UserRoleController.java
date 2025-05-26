@@ -4,8 +4,8 @@ package com.localzero.api.controller;
 import com.localzero.api.entity.Person;
 import com.localzero.api.enumeration.UserRole;
 import com.localzero.api.entity.UserRoleAssignment;
-import com.localzero.api.repository.PersonRepository;
-import com.localzero.api.repository.UserRoleAssignmentRepository;
+import com.localzero.api.service.PersonService;
+import com.localzero.api.service.UserRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
@@ -14,26 +14,23 @@ import java.util.List;
 @RequestMapping("/roles")
 public class UserRoleController {
 
-    @Autowired
-    private UserRoleAssignmentRepository roleRepo;
-    @Autowired
-    private PersonRepository personRepo;
+    private UserRoleService roleService;
+    private PersonService personService;
 
     @PostMapping
     public UserRoleAssignment assignRole(@RequestParam String email, @RequestParam UserRole role) {
 
-        Person p = personRepo.findById(email).orElseThrow();
+        Person p = personService.findByEmail(email);
 
         UserRoleAssignment assignment = new UserRoleAssignment();
         assignment.setPerson(p);
         assignment.setRole(role);
-        return roleRepo.save(assignment);
-        
+        return roleService.save(assignment);
     }
 
     @GetMapping
     public List<UserRoleAssignment> getRoles(@RequestParam String email) {
-        return roleRepo.findByPersonEmail(email);
+        return roleService.findByEmail(email);
     }
 
 }

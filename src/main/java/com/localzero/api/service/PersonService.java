@@ -1,8 +1,10 @@
 package com.localzero.api.service;
 
+import com.localzero.api.Logger;
 import com.localzero.api.entity.Person;
 import com.localzero.api.repository.PersonRepository;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -14,16 +16,18 @@ import java.util.Optional;
 import java.util.List;
 
 @Service
-@AllArgsConstructor
 public class PersonService implements UserDetailsService {
 
     @Autowired
-    private final PersonRepository personRepository;
+    private PersonRepository personRepository;
+    private Logger logger = Logger.getInstance();
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        System.out.println("Loading user by email: " + email);
-        Optional<Person> person = personRepository.findByEmail(email);
+
+        logger.log("Loading user by email: " + email);
+
+        Optional<Person> person = findOptionalByEmail(email);
         if (person.isPresent()) {
             var personObj = person.get();
             return User.builder().
@@ -31,12 +35,19 @@ public class PersonService implements UserDetailsService {
                     password(personObj.getPassword()).
                     build();
         } else {
-            throw new UsernameNotFoundException("User not found with email: " + email);
+            ;
+            throw new UsernameNotFoundException(logger.logError("User not found with email: " + email));
         }
     }
 
     public Person findByEmail(String email) {
-        return personRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("User not found"));
+        Person person = null;
+        try{
+            person = personRepository.findByEmail(email).orElseThrow(() -> new RuntimeException());
+        } catch (RuntimeException e) {
+            logger.logError("Error finding person by email: " + email + ", " + e);
+        }
+        return person;
     }
 
     public List<Person> findAll() {
@@ -47,7 +58,7 @@ public class PersonService implements UserDetailsService {
         return personRepository.findById(email);
     }
 
-    public void save(Person person) {
-        personRepository.save(person);
+    public Person save(Person person) {
+        return personRepository.save(person);
     }
 }
