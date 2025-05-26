@@ -5,16 +5,12 @@ import com.localzero.api.entity.Community;
 import com.localzero.api.entity.Initiative;
 import com.localzero.api.entity.Person;
 import com.localzero.api.repository.InitiativeRepository;
-import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class InitiativeService {
@@ -81,6 +77,10 @@ public class InitiativeService {
         Person person = personService.findByEmail(email);
         initiative.getParticipants().add(person);
         initiativeRepository.save(initiative);
+    }
+
+    public Optional<Initiative> optionalFindByTitle(String title) {
+        return initiativeRepository.findByTitle(title);
     }
 
     public void removeParticipant(Long initiativeId, String userEmail) {

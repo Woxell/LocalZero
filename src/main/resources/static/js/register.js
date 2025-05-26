@@ -12,7 +12,7 @@ function submitForm() {
         name: document.getElementById('name').value,
         email: document.getElementById('email').value,
         password: document.getElementById('password').value,
-        profilePicture: document.getElementById('profilePicture').value
+        //profilePicture: document.getElementById('profilePicture').value
     };
 
     if (!data.name || !data.email || !data.password) {

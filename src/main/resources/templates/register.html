@@ -8,6 +8,7 @@
     <link rel="icon" type="image/x-icon" href="/images/favicon.png">
 </head>
 <body>
+<div class="localzero-header">LocalZero</div>
 <section>
 <form class="form-container" method="post">
     <h1>Register</h1>
@@ -23,10 +24,13 @@
         <label for="password">Password:</label>
         <input type="password" id="password" name="password" required>
     </div>
-    <div class="input-group">
-        <label for="profilePicture">Profile Picture :</label>
-        <input type="file" id="profilePicture" name="profilePicture" accept="image/*" onchange="previewFile(this)" required>
-    </div>
+    <!--
+        <div class="input-group">
+            <label for="profilePicture">Profile Picture :</label>
+            <input type="file" id="profilePicture" name="profilePicture" accept="image/*" onchange="previewFile(this)"
+                   required>
+        </div>
+    -->
     <button id= "submit" type="button">Register</button>
 </form>
 </section>
