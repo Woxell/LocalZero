@@ -1,4 +1,4 @@
-const baseURL = 'https://localzero.fly.dev';
+const baseURL = 'https://localzero.se';
 
 document.getElementById("submit").addEventListener('click', (event) => {
     event.preventDefault(); // Prevent default form submission
