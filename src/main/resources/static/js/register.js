@@ -1,4 +1,4 @@
-const baseURL = 'https://localzero.se';
+const BASE_URL = document.getElementById('base-url').getAttribute('base-url');
 
 document.getElementById("submit").addEventListener('click', (event) => {
     event.preventDefault(); // Prevent default form submission
@@ -23,7 +23,7 @@ function submitForm() {
     console.log(data);
 
     const jsonData = JSON.stringify(data);
-    fetch(baseURL + '/register', {
+    fetch(BASE_URL + '/register', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
