@@ -1,6 +1,7 @@
 package com.localzero.api.service;
 
 import com.localzero.api.Logger;
+import com.localzero.api.entity.Person;
 import com.localzero.api.entity.Post;
 import com.localzero.api.repository.PostRepository;
 import lombok.AllArgsConstructor;
@@ -8,7 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -54,4 +57,8 @@ public class PostService {
                 new RuntimeException(logger.logError("Post not found with id: " + postId)));
     }
 
+    public Optional<Post> findByContentAndAuthor(String content, Person author) {
+        return postRepository.findByContentAndAuthor(content, author);
+
+    }
 }

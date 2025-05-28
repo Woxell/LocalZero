@@ -1,12 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="preload" as="image" href="/images/empty-boat-at-sea.jpg">
     <meta charset="UTF-8">
     <title>LocalZero - Register</title>
     <link rel="stylesheet" href="/css/main.css">
     <script src="/js/register.js" defer></script>
+    <link rel="icon" type="image/x-icon" href="/images/favicon.png">
 </head>
 <body>
+<div class="localzero-header">LocalZero</div>
 <section>
 <form class="form-container" method="post">
     <h1>Register</h1>
@@ -22,10 +25,13 @@
         <label for="password">Password:</label>
         <input type="password" id="password" name="password" required>
     </div>
-    <div class="input-group">
-        <label for="profilePicture">Profile Picture :</label>
-        <input type="file" id="profilePicture" name="profilePicture" accept="image/*" onchange="previewFile(this)" required>
-    </div>
+    <!--
+        <div class="input-group">
+            <label for="profilePicture">Profile Picture :</label>
+            <input type="file" id="profilePicture" name="profilePicture" accept="image/*" onchange="previewFile(this)"
+                   required>
+        </div>
+    -->
     <button id= "submit" type="button">Register</button>
 </form>
 </section>

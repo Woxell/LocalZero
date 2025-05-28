@@ -1,11 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="preload" as="image" href="/images/empty-boat-at-sea.jpg">
     <meta charset="UTF-8">
     <title>LocalZero - Login</title>
     <link rel="stylesheet" href="/css/main.css">
+    <link rel="icon" type="image/x-icon" href="/images/favicon.png">
 </head>
 <body>
+<div class="localzero-header">LocalZero</div>
 <section class="form-container">
 <h1>Login</h1>
 <form th:action="@{/login}" method="post">
@@ -18,8 +21,16 @@
         <input type="password" id="password" name="password" required>
     </div>
     <button type="submit">Login</button>
-    <p>Don't have an account? <a th:href="@{/register}" style="color: #90cdf4">Register here</a></p>
+    <p id="register-link">
+        Don't have an account? <a th:href="@{/register}">Register here</a>
+    </p>
+    <div th:if="${param.error}" class="error-message">
+        Invalid email or password.
+    </div>
 
+    <script th:if="${param.error}" th:inline="javascript">
+        console.log('Login error: [[${param.error}]]');
+    </script>
 </form>
 </section>
 </body>

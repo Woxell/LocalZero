@@ -24,7 +24,7 @@ html, body {
 }
 
 body {
-    background-image: url("https://www.psdstack.com/wp-content/uploads/2019/08/copyright-free-images-750x420.jpg");
+    background-image: url('/images/empty-boat-at-sea.jpg');
     background-repeat: no-repeat;
     background-position: center;
     background-size: cover;
@@ -57,6 +57,18 @@ body {
 
 .navbar a:hover {
     text-decoration: underline;
+}
+
+.localzero-header {
+    font-family: 'Lucida Sans Unicode', Lucida Grande;
+    font-size: 4rem;
+    color: #f9e2ff;
+    text-align: center;
+    margin-top: 20px;
+    margin-bottom: 24px;
+    letter-spacing: 6px;
+    font-weight: bold;
+    text-shadow: 0px 0px 10px #ff01e0;
 }
 
 .feed-wrapper {
@@ -371,4 +383,23 @@ button:hover {
     max-width: 400px;
     width: 100%;
     height: auto;
+}
+
+#register-link {
+    margin-top: 1.5em;
+    text-align: center;
+    font-size: 1.05em;
+    color: #555;
+    background: #f0f4f8;
+    padding: 0.75em 1em;
+    border-radius: 6px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+}
+#register-link a {
+    color: #a731ce;
+    font-weight: bold;
+    text-decoration: underline;
+}
+#register-link a:hover {
+    color: #e38dff;
 }

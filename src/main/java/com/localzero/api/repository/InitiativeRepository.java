@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 public interface InitiativeRepository extends JpaRepository<Initiative,Long> {
@@ -21,4 +22,5 @@ public interface InitiativeRepository extends JpaRepository<Initiative,Long> {
     List<Initiative> findByIsPublicTrue();
     List<Initiative> findByIsPublicTrueOrCommunitiesIn(Set<Community> communities);
 
+    Optional<Initiative> findByTitle(String title);
 }
