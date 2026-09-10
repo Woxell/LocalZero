@@ -1,5 +1,3 @@
-const BASE_URL = document.getElementById('base-url').getAttribute('base-url');
-
 function openNewChatDialog() {
     document.getElementById('dialogBackdrop').style.display = 'block';
     document.getElementById('newChatDialog').style.display = 'block';
@@ -13,7 +11,7 @@ function closeNewChatDialog() {
 function startChat(email) {
     closeNewChatDialog();
 
-    fetch(BASE_URL + '/messages/' + email)
+    fetch('/messages/' + email)
         .then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not ok');
@@ -42,7 +40,7 @@ function startChat(email) {
                 let contentHtml;
                 if (msg.content === "image" && msg.id) {
                     // Display image
-                    contentHtml = `<img src="${BASE_URL}/messages/image/${msg.id}" alt="Image" style="max-width:200px; max-height:200px;" />`;
+                    contentHtml = `<img src="/messages/image/${msg.id}" alt="Image" style="max-width:200px; max-height:200px;" />`;
                 } else {
                     // Display text
                     contentHtml = msg.content;
@@ -111,7 +109,7 @@ function sendMessage() {
             receiverEmail: receiverEmail,
             content: message
         };
-        fetch(BASE_URL + '/messages', {
+        fetch('/messages', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -171,7 +169,7 @@ function subscribeToMessages(clientEmail, receiverEmail) {
 }
 
 function refreshDmList() {
-    fetch(BASE_URL + '/messages/chatpartners')
+    fetch('/messages/chatpartners')
         .then(response => response.json())
         .then(chatPartners => {
             const dmList = document.querySelector('.dm-list');

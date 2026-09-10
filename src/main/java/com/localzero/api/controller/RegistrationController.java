@@ -10,7 +10,7 @@ import com.localzero.api.service.PersonService;
 import lombok.Data;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
+//import org.springframework.beans.factory.annotation.Value;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,15 +23,15 @@ public class RegistrationController {
 
     @Autowired
     private PersonService personService;
-    private boolean isDevelopment;
+    //private boolean isDevelopment;
 
-    public RegistrationController(@Value("${is_development}") String isDevelopment) {
+    /*public RegistrationController(@Value("${is_development}") String isDevelopment) {
         this.isDevelopment = isDevelopment.equals("true");
-    }
+    }*/
 
     @GetMapping("/register")
     public String showRegistrationForm(Model model){
-        model.addAttribute("base_url", isDevelopment ? "http://localhost:8080" : "https://localzero.se");
+        //model.addAttribute("base_url", isDevelopment ? "http://localhost:8080" : "https://localzero.se");
         return "register";
     }
 

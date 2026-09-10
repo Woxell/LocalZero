@@ -5,7 +5,7 @@ import com.localzero.api.entity.Person;
 import com.localzero.api.service.DMService;
 import com.localzero.api.service.NotificationService;
 import com.localzero.api.service.PersonService;
-import org.springframework.beans.factory.annotation.Value;
+//import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -29,20 +29,20 @@ public class MessageController {
     private NotificationService notificationService;
     private PersonService personService;
     private SSEProxy sseProxy;
-    private boolean isDevelopment;
+    //private boolean isDevelopment;
 
     public MessageController(
             DMService dmService,
             NotificationService notificationService,
             PersonService personService,
-            SSEProxy sseProxy,
-            @Value("${is_development}") String isDevelopment
+            SSEProxy sseProxy/*,
+            @Value("${is_development}") String isDevelopment*/
     ) {
         this.dmService = dmService;
         this.notificationService = notificationService;
         this.personService = personService;
         this.sseProxy = sseProxy;
-        this.isDevelopment = isDevelopment.equals("true");
+        //this.isDevelopment = isDevelopment.equals("true");
     }
 
     @GetMapping
@@ -62,7 +62,7 @@ public class MessageController {
             if (!m.getSenderEmail().equals(loggedInUserEmail)) chatPartners.add(m.getSenderEmail());
             if (!m.getReceiverEmail().equals(loggedInUserEmail)) chatPartners.add(m.getReceiverEmail());
         }
-        model.addAttribute("base_url", isDevelopment ? "http://localhost:8080" : "https://localzero.se");
+        //model.addAttribute("base_url", isDevelopment ? "http://localhost:8080" : "https://localzero.se");
         model.addAttribute("chatPartners", getChatPartners(authentication));
         model.addAttribute("messages", messages); // Add messages to the model
         model.addAttribute("persons", persons);
