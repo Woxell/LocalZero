@@ -53,7 +53,7 @@ public class DataInitializer {
             p.setEmail("bob@example.com");
             p.setName("Bob");
             p.setPassword("{noop}pass");
-            p.setCommunities(Set.of(c1));
+            p.setCommunities(Set.of(c2));
             return personService.save(p);
         });
         Person p3 = personService.findOptionalByEmail("charlie@example.com").orElseGet(() -> {
@@ -61,7 +61,7 @@ public class DataInitializer {
             p.setEmail("charlie@example.com");
             p.setName("Charlie");
             p.setPassword("{noop}pass");
-            p.setCommunities(Set.of(c2));
+            p.setCommunities(Set.of(c3));
             return personService.save(p);
         });
 

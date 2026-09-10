@@ -5,7 +5,6 @@ import com.localzero.api.entity.Person;
 import com.localzero.api.service.DMService;
 import com.localzero.api.service.NotificationService;
 import com.localzero.api.service.PersonService;
-import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;

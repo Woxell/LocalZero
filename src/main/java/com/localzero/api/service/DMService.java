@@ -3,7 +3,6 @@ package com.localzero.api.service;
 import com.localzero.api.Logger;
 import com.localzero.api.entity.DirectMessage;
 import com.localzero.api.repository.DirectMessageRepository;
-import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

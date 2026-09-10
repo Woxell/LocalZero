@@ -4,7 +4,6 @@ import com.localzero.api.Logger;
 import com.localzero.api.entity.Notification;
 import com.localzero.api.entity.Person;
 import com.localzero.api.repository.NotificationsRepository;
-import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

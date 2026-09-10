@@ -6,7 +6,6 @@ import com.localzero.api.enumeration.UserRole;
 import com.localzero.api.entity.UserRoleAssignment;
 import com.localzero.api.service.PersonService;
 import com.localzero.api.service.UserRoleService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 

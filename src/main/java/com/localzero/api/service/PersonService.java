@@ -3,8 +3,6 @@ package com.localzero.api.service;
 import com.localzero.api.Logger;
 import com.localzero.api.entity.Person;
 import com.localzero.api.repository.PersonRepository;
-import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;

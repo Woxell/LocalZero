@@ -75,7 +75,7 @@ public class PostController {
             imageData = image.getBytes();
         }
 
-        Post post = postCreator.create(currentUser.getUsername(), content, initiativeId, ecoAction, imageData);
+        postCreator.create(currentUser.getUsername(), content, initiativeId, ecoAction, imageData);
 
         if (initiativeId != null) {
             return "redirect:/initiatives/" + initiativeId;
